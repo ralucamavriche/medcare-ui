@@ -11,33 +11,35 @@ import { Helmet } from "react-helmet";
 
 import AccountProfile from "../../modules/Account/AccountProfile";
 import { AccountDetails } from "../../modules/Account/AccountDetails";
-import { getUsers, getUserById } from "../../services/user.service";
+import { getUserById, updateUser } from "../../services/user.service";
 
 const AccountPage = () => {
-  // const [users, setUsers] = useState([]);
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const users = await getUsers();
-        setUser(users);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     const fetchUserById = async () => {
       try {
-        const user = await getUserById("65df2d289a8b913dd6489891");
+        const user = await getUserById("6622860fb86904e3655abcf2");
         setUser(user);
-      } catch (error) {
-        console.log(error);
+      } catch (error: any) {
+        alert(error?.message)
+        console.log(error)
       }
     };
 
-    fetchUsers();
     fetchUserById();
   }, []);
+
+  const handleOnUserDetailsChange = async (newUserDetails: any) => {
+    const { id, firstName, lastName, email, phone, address, city, country } = newUserDetails;
+
+    try {
+      const user = await updateUser(id, { firstName, lastName, email, phone, address, city, country });
+      setUser(user);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
@@ -59,11 +61,11 @@ const AccountPage = () => {
             <div>
               <Grid container spacing={3}>
                 <Grid xs={12} md={6} lg={4}>
-                  <AccountProfile />
+                  <AccountProfile userDetails={user} onChange={handleOnUserDetailsChange} />
                   {JSON.stringify(user)}
                 </Grid>
                 <Grid xs={12} md={6} lg={8}>
-                  <AccountDetails />
+                  <AccountDetails userDetails={user} onChange={handleOnUserDetailsChange} />
                 </Grid>
               </Grid>
             </div>
