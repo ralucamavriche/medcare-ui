@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { getUserById } from "../../services/user.service";
 import {
   Avatar,
   Box,
@@ -10,30 +9,52 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
+import { UserUpdate } from "../../models/User";
 
-const user = {
-  avatar: "/assets/avatars/avatar-anika-visser.png",
-  city: "Iasi",
-  country: "Romania",
-  name: "Anika Visser",
-  timezone: "GTM-7",
+const INITIAL_STATE = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  address: "",
+  city: "",
+  country: "",
+}
+
+
+const calculateTimeZone: any = () => {
+  const currentTime = new Date();
+  const timezoneOffset = currentTime.getTimezoneOffset();
+
+  // Convert timezone offset to hours and minutes
+  const hoursOffset = Math.abs(Math.floor(timezoneOffset / 60));
+  const minutesOffset = Math.abs(timezoneOffset % 60);
+  const sign = timezoneOffset >= 0 ? '-' : '+';
+
+  const formattedTimezone = `UTC ${sign}${hoursOffset}:${minutesOffset}`;
+  return formattedTimezone;
 };
 
-const AccountProfile = () => {
-  const [user, setUser] = useState({});
+const AccountProfile = (props: any) => {
+  const { userDetails, onChange } = props
+
+  const [values, setValues] = useState<UserUpdate>(INITIAL_STATE);
 
   useEffect(() => {
-    const fetchUserById = async () => {
-      try {
-        const user = await getUserById("65df2d289a8b913dd6489891");
-        setUser(user);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    setValues({
+      ...values,
+      ...userDetails
+    })
+  }, [userDetails])
 
-    fetchUserById();
-  }, []);
+  const handleChange = (event: any) => {
+    setValues((prevState: any) => ({
+      ...prevState,
+      [event.target.name]: event.target.value
+    }));
+    onChange(values);
+  }
+
   return (
     <>
       <Card>
@@ -53,22 +74,23 @@ const AccountProfile = () => {
                 width: 80,
               }}
             />
-            <Typography gutterBottom variant="h5">
-            {JSON.stringify(user.email)}
-              {user.name}
+            <Typography gutterBottom variant="h5" onChange={handleChange}>
+              {values.firstName}
+            </Typography>
+            <Typography color="text.secondary" variant="body2" onChange={handleChange}>
+              {values.city} {values.country}
             </Typography>
             <Typography color="text.secondary" variant="body2">
-              {user.city} {user.country}
-            </Typography>
-            <Typography color="text.secondary" variant="body2">
-              {user.timezone}
+              {
+                calculateTimeZone()
+              }
             </Typography>
           </Box>
         </CardContent>
         <Divider />
         <CardActions>
           <Button fullWidth variant="text">
-            Upload picture
+            {/* Upload picture */}
           </Button>
         </CardActions>
       </Card>
@@ -77,52 +99,3 @@ const AccountProfile = () => {
 };
 
 export default AccountProfile;
-// export const AccountProfile = () => (
-//   <Card>
-//     <CardContent>
-//       <Box
-//         sx={{
-//           alignItems: 'center',
-//           display: 'flex',
-//           flexDirection: 'column'
-//         }}
-//       >
-//         <Avatar
-//           src={user.avatar}
-//           sx={{
-//             height: 80,
-//             mb: 2,
-//             width: 80
-//           }}
-//         />
-//         <Typography
-//           gutterBottom
-//           variant="h5"
-//         >
-//           {user.name}
-//         </Typography>
-//         <Typography
-//           color="text.secondary"
-//           variant="body2"
-//         >
-//           {user.city} {user.country}
-//         </Typography>
-//         <Typography
-//           color="text.secondary"
-//           variant="body2"
-//         >
-//           {user.timezone}
-//         </Typography>
-//       </Box>
-//     </CardContent>
-//     <Divider />
-//     <CardActions>
-//       <Button
-//         fullWidth
-//         variant="text"
-//       >
-//         Upload picture
-//       </Button>
-//     </CardActions>
-//   </Card>
-// );
