@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Box,
   Button,
@@ -10,53 +10,63 @@ import {
   TextField,
   Unstable_Grid2 as Grid,
 } from "@mui/material";
+import { UserUpdate } from "../../models/User";
 
 const cities = [
   {
-    value: "bacau",
+    value: "Bacau",
     label: "Bacau",
   },
   {
-    value: "iasi",
+    value: "Iasi",
     label: "Iasi",
   },
   {
-    value: "bucuresti",
+    value: "Bucuresti",
     label: "Bucuresti",
   },
   {
-    value: "suceava",
+    value: "Suceava",
     label: "Suceava",
   },
 ];
 
-export const AccountDetails = () => {
-  const [values, setValues] = useState({
-    firstName: "Anika",
-    lastName: "Visser",
-    email: "demo@gmail.com",
-    phone: "",
-    address:"Strada Principala",
-    city: "iasi",
-    country: "Romania",
-  });
+const INITIAL_STATE = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  address: "",
+  city: "",
+  country: "",
+}
 
-  const handleChange = useCallback(
-    (event: { target: { name: string; value: unknown; }; }) => {
-      setValues((prevState) => ({
-        ...prevState,
-        [event.target.name]: event.target.value
-      }));
-    },
-    []
+export const AccountDetails = (props: any) => {
+  const { userDetails, onChange } = props
+  
+  const [values, setValues] = useState<UserUpdate>(
+    INITIAL_STATE
   );
 
-  const handleSubmit = useCallback(
-    (event: { preventDefault: () => void; }) => {
-      event.preventDefault();
-    },
-    []
-  );
+  useEffect(() => {
+    setValues({
+      ...values,
+      ...userDetails
+    })
+  }, [userDetails])
+
+  const handleChange = (event: any) => {
+    setValues((prevState: any) => ({
+      ...prevState,
+      [event.target.name]: event.target.value
+    }));
+  }
+
+
+  const handleSubmit = (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+    onChange(values);
+  }
 
   return (
     <form autoComplete="off" noValidate onSubmit={handleSubmit}>
@@ -102,7 +112,6 @@ export const AccountDetails = () => {
                   label="Phone Number"
                   name="phone"
                   onChange={handleChange}
-                  type="number"
                   value={values.phone}
                 />
               </Grid>
@@ -150,7 +159,7 @@ export const AccountDetails = () => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button variant="contained">Save details</Button>
+          <Button variant="contained" type="submit">Save details</Button>
         </CardActions>
       </Card>
     </form>
