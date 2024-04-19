@@ -10,12 +10,17 @@ import {
 } from "@mui/material";
 import { useCallback } from "react";
 import { useFormik } from "formik";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import * as ReactRouter from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { AuthService } from '../../../services'
+import useAuth from "../../../hooks/useAuth";
 
 const LoginPage = () => {
-  // const [method, setMethod] = useState("email");
+  const { addUser } = useAuth()
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       email: "demo@devias.io",
@@ -31,7 +36,14 @@ const LoginPage = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        alert(JSON.stringify(values, null, 2));
+        const { email, password } = values
+
+        const user = await AuthService.login(email, password)
+
+        if(user) {
+          addUser(user)
+          navigate("/dashboard");
+        }
       } catch (err) {
         if (err instanceof Error) {
           helpers.setStatus({ success: false });
@@ -46,11 +58,7 @@ const LoginPage = () => {
     },
   });
 
-  // const handleMethodChange = useCallback((event, value) => {
-  //   setMethod(value);
-  // }, []);
-
-  const handleSkip = useCallback(() => {}, []);
+  const handleSkip = useCallback(() => { }, []);
 
   return (
     <>
@@ -89,11 +97,6 @@ const LoginPage = () => {
                 </Link>
               </Typography>
             </Stack>
-            {/* <Tabs onChange={handleMethodChange} sx={{ mb: 3 }} value={method}>
-              <Tab label="Email" value="email" />
-              <Tab label="Phone Number" value="phoneNumber" />
-            </Tabs> */}
-            {/* {method === "email" && ( */}
             <form noValidate onSubmit={formik.handleSubmit}>
               <Stack spacing={3}>
                 <TextField
@@ -151,18 +154,6 @@ const LoginPage = () => {
                 </div>
               </Alert>
             </form>
-            {/* )} */}
-            {/* {method === "phoneNumber" && (
-              <div>
-                <Typography sx={{ mb: 1 }} variant="h6">
-                  Not available in the demo
-                </Typography>
-                <Typography color="text.secondary">
-                  To prevent unnecessary costs we disabled this feature in the
-                  demo.
-                </Typography>
-              </div>
-            )} */}
           </div>
         </Box>
       </Box>

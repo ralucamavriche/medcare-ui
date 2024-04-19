@@ -50,9 +50,9 @@ export const createUser = async (payload: any) => {
   }
 };
 
-export const updateUser = async (payload: any) => {
+export const updateUser = async (id: string, payload: any) => {
   try {
-    const response = await api.patch("/users", payload);
+    const response = await api.patch(`/users/${id}`, payload);
     if (response.status !== 200) {
       throw new Error(response.statusText);
     }

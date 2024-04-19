@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -11,31 +10,18 @@ import { Helmet } from "react-helmet";
 
 import AccountProfile from "../../modules/Account/AccountProfile";
 import { AccountDetails } from "../../modules/Account/AccountDetails";
-import { getUserById, updateUser } from "../../services/user.service";
+import { updateUser } from "../../services/user.service";
+import useAuth from "../../hooks/useAuth";
 
 const AccountPage = () => {
-  const [user, setUser] = useState({});
-
-  useEffect(() => {
-    const fetchUserById = async () => {
-      try {
-        const user = await getUserById("6622860fb86904e3655abcf2");
-        setUser(user);
-      } catch (error: any) {
-        alert(error?.message)
-        console.log(error)
-      }
-    };
-
-    fetchUserById();
-  }, []);
+  const { user, addUser } = useAuth()
 
   const handleOnUserDetailsChange = async (newUserDetails: any) => {
     const { id, firstName, lastName, email, phone, address, city, country } = newUserDetails;
 
     try {
       const user = await updateUser(id, { firstName, lastName, email, phone, address, city, country });
-      setUser(user);
+      addUser(user);
     } catch (error) {
       console.log(error);
     }

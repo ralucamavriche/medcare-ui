@@ -14,6 +14,9 @@ import Sidebar from "./components/Sidebar";
 import DashboardPage from "./containers/Dashboard";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { AuthContext, User } from "./context/AuthContext";
+import { useEffect, useState } from "react";
+import { AuthService } from "./services";
 
 const Fonts = () => (
   <>
@@ -35,29 +38,47 @@ const Fonts = () => (
 );
 
 const App = () => {
+  const [user, setUser] = useState<User | null>(null)
+
+  const setUserData = (user: User | null) => {
+    setUser(user)
+  }
+
+  useEffect(() => {
+    (async () => {
+      const { error, user} = await AuthService.getUserDetails()
+
+      if(error) {
+        console.error(error)
+      } else if(user) {
+        setUserData(user)
+      }
+    })()
+  }, [])
+
   return (
     <>
       <Helmet>
         <Fonts />
       </Helmet>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomeLayout />}>
-            <Route index element={<HomePage />} />
-          </Route>
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<DashboardPage />} />
-            <Route path="appointment" element={<AppointmentPage />} />
-            <Route path="account" element={<AccountPage />} />
-          </Route>
-          <Route path="/auth" element={<AuthLayout />}>
-            <Route path="login" element={<LoginPage />} />
-          </Route>
-          <Route path="/auth" element={<AuthLayout />}>
-            <Route path="register" element={<RegisterPage />} />
-          </Route>
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <AuthContext.Provider value={{ user, setUser: setUserData }}>
+          <Routes>
+            <Route path="/" element={<HomeLayout />}>
+              <Route index element={<HomePage />} />
+            </Route>
+            <Route path="/dashboard" element={<DashboardLayout />}>
+              <Route index element={<DashboardPage />} />
+              <Route path="appointment" element={<AppointmentPage />} />
+              <Route path="account" element={<AccountPage />} />
+            </Route>
+            <Route path="/auth" element={<AuthLayout />}>
+              <Route path="login" element={<LoginPage />} />
+              <Route path="register" element={<RegisterPage />} />
+            </Route>
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </AuthContext.Provider>
       </BrowserRouter>
     </>
   );
@@ -100,7 +121,7 @@ function HomeLayout() {
     <div>
       <Header />
       <Outlet />
-      <Footer/>
+      <Footer />
     </div>
   );
 }
