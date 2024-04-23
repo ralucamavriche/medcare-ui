@@ -12,15 +12,20 @@ import AccountProfile from "../../modules/Account/AccountProfile";
 import { AccountDetails } from "../../modules/Account/AccountDetails";
 import { updateUser } from "../../services/user.service";
 import useAuth from "../../hooks/useAuth";
+import { User } from "../../models/User";
 
 const AccountPage = () => {
   const { user, addUser } = useAuth()
 
-  const handleOnUserDetailsChange = async (newUserDetails: any) => {
-    const { id, firstName, lastName, email, phone, address, city, country } = newUserDetails;
+  const handleOnSubmitChanges = async (payload: Partial<User>) => {
+    const { id } = user || {}
 
     try {
-      const user = await updateUser(id, { firstName, lastName, email, phone, address, city, country });
+      if(!id) {
+        throw new Error('Failed to submit changes. Id not defined')
+      }
+      
+      const user = await updateUser(id, payload);
       addUser(user);
     } catch (error) {
       console.log(error);
@@ -47,11 +52,11 @@ const AccountPage = () => {
             <div>
               <Grid container spacing={3}>
                 <Grid xs={12} md={6} lg={4}>
-                  <AccountProfile userDetails={user} onChange={handleOnUserDetailsChange} />
+                  <AccountProfile userDetails={user} />
                   {JSON.stringify(user)}
                 </Grid>
                 <Grid xs={12} md={6} lg={8}>
-                  <AccountDetails userDetails={user} onChange={handleOnUserDetailsChange} />
+                  <AccountDetails userDetails={user} onSubmit={handleOnSubmitChanges} />
                 </Grid>
               </Grid>
             </div>

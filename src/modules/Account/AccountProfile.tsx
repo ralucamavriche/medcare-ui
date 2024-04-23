@@ -1,59 +1,30 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
-  Button,
   Card,
-  CardActions,
   CardContent,
   Divider,
   Typography,
 } from "@mui/material";
-import { UserUpdate } from "../../models/User";
+import { User } from "../../models/User";
 
-const INITIAL_STATE = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  phone: "",
-  address: "",
-  city: "",
-  country: "",
+interface IAccountProfile {
+  userDetails: User | null
 }
 
-
-const calculateTimeZone: any = () => {
-  const currentTime = new Date();
-  const timezoneOffset = currentTime.getTimezoneOffset();
-
-  // Convert timezone offset to hours and minutes
-  const hoursOffset = Math.abs(Math.floor(timezoneOffset / 60));
-  const minutesOffset = Math.abs(timezoneOffset % 60);
-  const sign = timezoneOffset >= 0 ? '-' : '+';
-
-  const formattedTimezone = `UTC ${sign}${hoursOffset}:${minutesOffset}`;
-  return formattedTimezone;
-};
-
-const AccountProfile = (props: any) => {
-  const { userDetails, onChange } = props
-
-  const [values, setValues] = useState<UserUpdate>(INITIAL_STATE);
+const AccountProfile = (props: IAccountProfile) => {
+  const { userDetails } = props
+  const { firstName, country, city } = userDetails || {}
+  const [time, setTime] = useState(new Date().toISOString())
 
   useEffect(() => {
-    setValues({
-      ...values,
-      ...userDetails
-    })
-  }, [userDetails])
+    const interval = setInterval(() => {
+      setTime(new Date().toISOString());
+    }, 1000);
 
-  const handleChange = (event: any) => {
-    setValues((prevState: any) => ({
-      ...prevState,
-      [event.target.name]: event.target.value
-    }));
-    onChange(values);
-  }
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -74,25 +45,18 @@ const AccountProfile = (props: any) => {
                 width: 80,
               }}
             />
-            <Typography gutterBottom variant="h5" onChange={handleChange}>
-              {values.firstName}
-            </Typography>
-            <Typography color="text.secondary" variant="body2" onChange={handleChange}>
-              {values.city} {values.country}
+            <Typography gutterBottom variant="h5">
+              {firstName}
             </Typography>
             <Typography color="text.secondary" variant="body2">
-              {
-                calculateTimeZone()
-              }
+              {city} {country}
+            </Typography>
+            <Typography color="text.secondary" variant="body2">
+              {time}
             </Typography>
           </Box>
         </CardContent>
         <Divider />
-        <CardActions>
-          <Button fullWidth variant="text">
-            {/* Upload picture */}
-          </Button>
-        </CardActions>
       </Card>
     </>
   );

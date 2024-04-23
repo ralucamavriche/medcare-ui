@@ -9,10 +9,18 @@ import {
   Divider,
   TextField,
   Unstable_Grid2 as Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
-import { UserUpdate } from "../../models/User";
+import { User } from "../../models/User";
 
-const cities = [
+const CITIES = [
+  {
+    value: '',
+    label: 'Select City'
+  },
   {
     value: "Bacau",
     label: "Bacau",
@@ -31,7 +39,7 @@ const cities = [
   },
 ];
 
-const INITIAL_STATE = {
+const INITIAL_STATE: User = {
   firstName: "",
   lastName: "",
   email: "",
@@ -42,11 +50,12 @@ const INITIAL_STATE = {
 }
 
 export const AccountDetails = (props: any) => {
-  const { userDetails, onChange } = props
-  
-  const [values, setValues] = useState<UserUpdate>(
+  const { userDetails, onSubmit } = props
+
+  const [values, setValues] = useState<User>(
     INITIAL_STATE
   );
+  const [changedFields, setChangedFields] = useState<Partial<User>>({})
 
   useEffect(() => {
     setValues({
@@ -60,12 +69,16 @@ export const AccountDetails = (props: any) => {
       ...prevState,
       [event.target.name]: event.target.value
     }));
+    setChangedFields((prevState: any) => ({
+      ...prevState,
+      [event.target.name]: event.target.value
+    }));
   }
 
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-    onChange(values);
+    onSubmit(changedFields);
   }
 
   return (
@@ -78,7 +91,6 @@ export const AccountDetails = (props: any) => {
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  helperText="Please specify the first name"
                   label="First name"
                   name="firstName"
                   onChange={handleChange}
@@ -121,36 +133,30 @@ export const AccountDetails = (props: any) => {
                   label="Country"
                   name="country"
                   onChange={handleChange}
-                  required
                   value={values.country}
                 />
               </Grid>
               <Grid xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label="Select City"
-                  name="city"
-                  onChange={handleChange}
-                  required
-                  select
-                  SelectProps={{ native: true }}
-                  value={values.city}
-                >
-                  {cities.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </TextField>
+                <FormControl fullWidth>
+                  <InputLabel id="city">City</InputLabel>
+                  <Select
+                    labelId="city"
+                    id="city2"
+                    name="city"
+                    value={values.city}
+                    label="Select City"
+                    onChange={handleChange}
+                  >
+                    {CITIES.map(({ value, label }) => <MenuItem key={value} value={value}>{label}</MenuItem>)}
+                  </Select>
+                </FormControl>
               </Grid>
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
-                  helperText="Please specify your address"
                   label="Address"
                   name="address"
                   onChange={handleChange}
-                  required
                   value={values.address}
                 />
               </Grid>

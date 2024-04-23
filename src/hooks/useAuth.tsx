@@ -1,12 +1,6 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-
-export interface User {
-    id: string;
-    name: string;
-    email: string;
-    authToken?: string;
-}
+import { User } from "../models/User";
 
 const useAuth = () => {
     const { user, setUser } = useContext(AuthContext);
