@@ -56,3 +56,7 @@ export const login = async (email: string, password: string) => {
         console.log(error)
     }
 }
+
+export const logout = () => {
+    return localStorage.removeItem(MEDCARE_TOKEN)
+}

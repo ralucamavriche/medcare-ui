@@ -10,11 +10,12 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { PeopleAlt } from "@mui/icons-material";
+import { PeopleAlt, ExitToApp } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import Logo from "../Logo";
 import { useState } from "react";
+import useAuth from "../../hooks/useAuth";
 
 const Container = styled("div")(({ theme }) => ({
   display: "flex",
@@ -70,9 +71,36 @@ const RenderLogo = () => (
   </Box>
 );
 
+const LOGGEDIN_ROUTES = [{
+  to: '/dashboard',
+  label: 'Dashboard'
+}, {
+  to: '/dashboard/appointment',
+  label: 'Appointment'
+}, {
+  to: '/contact',
+  label: 'Contact'
+}, {
+  to: '/Details',
+  label: 'Details'
+}]
+
 const Header = () => {
+  const { user,removeUser } = useAuth()
   const [showDrawer, setShowDrawer] = useState(false);
   const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("lg"));
+
+  const isLoggedIn = !!user
+
+  const generateLoggedInRoutes = () => {
+    if (!isLoggedIn) {
+      return null
+    }
+
+    return LOGGEDIN_ROUTES.map(({ to, label }) => (<Link to={to}>
+      <Button sx={{ color: "neutral.600" }}>{label}</Button>
+    </Link>))
+  }
 
   return (
     <Box
@@ -109,14 +137,7 @@ const Header = () => {
               }}
             >
               <Stack alignItems="center" direction="row" spacing={1}>
-                <Link to={"/dashboard"}>
-                  <Button sx={{ color: "neutral.600" }}>Dashboard</Button>
-                </Link>
-                <Link to={"/dashboard/appointment"}>
-                  <Button sx={{ color: "neutral.600" }}>Appointment</Button>
-                </Link>
-                <Button sx={{ color: "neutral.600" }}>Contact</Button>
-                <Button sx={{ color: "neutral.600" }}>Details</Button>
+                {generateLoggedInRoutes()}
               </Stack>
             </Box>
             <Box
@@ -126,18 +147,31 @@ const Header = () => {
               }}
             >
               <Stack alignItems="center" direction="row" spacing={1}>
-                <Box component={Link} to="/auth/login">
+                {isLoggedIn ? (
                   <Button
                     sx={{ color: "neutral.600" }}
+                    onClick={removeUser}
                     startIcon={
                       <SvgIcon fontSize="small">
-                        <PeopleAlt />
+                        <ExitToApp />
                       </SvgIcon>
                     }
                   >
-                    Login
+                    Logout
                   </Button>
-                </Box>
+                ) : (
+                  <Box component={Link} to="/auth/login">
+                    <Button
+                      sx={{ color: "neutral.600" }}
+                      startIcon={
+                        <SvgIcon fontSize="small">
+                          <PeopleAlt />
+                        </SvgIcon>
+                      }
+                    >
+                      Login
+                    </Button>
+                  </Box>)}
               </Stack>
             </Box>
           </>

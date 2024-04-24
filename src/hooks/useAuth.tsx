@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { User } from "../models/User";
+import { AuthService } from "../services";
 
 const useAuth = () => {
     const { user, setUser } = useContext(AuthContext);
@@ -10,6 +11,7 @@ const useAuth = () => {
     };
 
     const removeUser = () => {
+        AuthService.logout()
         setUser(null);
     };
 

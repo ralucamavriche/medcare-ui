@@ -50,11 +50,12 @@ const INITIAL_STATE: User = {
 }
 
 export const AccountDetails = (props: any) => {
-  const { userDetails, onSubmit } = props
+  const { userDetails, onSubmit, isLoading } = props
 
   const [values, setValues] = useState<User>(
     INITIAL_STATE
   );
+
   const [changedFields, setChangedFields] = useState<Partial<User>>({})
 
   useEffect(() => {
@@ -151,6 +152,7 @@ export const AccountDetails = (props: any) => {
                   </Select>
                 </FormControl>
               </Grid>
+              
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
@@ -165,7 +167,9 @@ export const AccountDetails = (props: any) => {
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button variant="contained" type="submit">Save details</Button>
+          <Button disabled={isLoading} variant="contained" type="submit">
+            {isLoading ? 'Loading...' : 'Save details'}
+          </Button>
         </CardActions>
       </Card>
     </form>

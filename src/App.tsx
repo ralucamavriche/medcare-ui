@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import Helmet from "react-helmet";
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 import HomePage from "./containers/Home";
 import AppointmentPage from "./containers/Appointment";
@@ -18,6 +20,8 @@ import { AuthContext } from "./context/AuthContext";
 import { useEffect, useState } from "react";
 import { AuthService } from "./services";
 import { User } from "./models/User";
+import useAuthGuard from "./hooks/useAuthGuard";
+import Spinner from "./components/Spinner/Spinner";
 
 const Fonts = () => (
   <>
@@ -35,15 +39,11 @@ const Fonts = () => (
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&display=swap"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
   </>
 );
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
 
   const setUserData = (user: User | null) => {
@@ -59,8 +59,13 @@ const App = () => {
       } else if(user) {
         setUserData(user)
       }
+      setIsLoading(false)
     })()
   }, [])
+
+  if(isLoading) {
+    return <Spinner/>
+  }
 
   return (
     <>
@@ -109,6 +114,8 @@ const LayoutContainer = styled("div")({
 });
 
 function DashboardLayout() {
+  useAuthGuard()
+
   return (
     <div>
       <Navbar />
@@ -118,6 +125,7 @@ function DashboardLayout() {
           <Outlet />
         </LayoutContainer>
       </LayoutRoot>
+      <ToastContainer/>
     </div>
   );
 }
