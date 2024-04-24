@@ -14,9 +14,10 @@ import Sidebar from "./components/Sidebar";
 import DashboardPage from "./containers/Dashboard";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { AuthContext, User } from "./context/AuthContext";
+import { AuthContext } from "./context/AuthContext";
 import { useEffect, useState } from "react";
 import { AuthService } from "./services";
+import { User } from "./models/User";
 
 const Fonts = () => (
   <>
@@ -34,6 +35,11 @@ const Fonts = () => (
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&display=swap"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
   </>
 );
 
