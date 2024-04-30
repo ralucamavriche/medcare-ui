@@ -3,15 +3,24 @@ import * as ReactRouter from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Helmet } from "react-helmet";
+import { AuthService } from "../../../services";
+import useAuth from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+
 
 // localStorage.setItem('user', "asdas")
 // undefined
 // localStorage.getItem('user') 
 const RegisterPage = () => {
+  const { addUser } = useAuth()
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       email: "",
-      name: "",
+      firstName: "",
+      lastName: "",
       password: "",
       submit: null,
     },
@@ -20,17 +29,28 @@ const RegisterPage = () => {
         .email("Must be a valid email")
         .max(255)
         .required("Email is required"),
-      name: Yup.string().max(255).required("Name is required"),
+      firstName: Yup.string().max(255).required("First Name is required"),
+      lastName: Yup.string().max(255).required("Last Name is required"),
       password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: async (values, helpers) => {
+      
       try {
-        alert(JSON.stringify(values, null, 2));
+        const { firstName, lastName, email, password } = values
+
+        const user = await AuthService.register(firstName, lastName, email, password)
+
+        if (user) {
+          addUser(user)
+          navigate("/dashboard");
+        }
       } catch (err) {
         if (err instanceof Error) {
+          alert(err)
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: err.message });
           helpers.setSubmitting(false);
+
         } else {
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: "An unknown error occurred." });
@@ -79,14 +99,24 @@ const RegisterPage = () => {
             <form noValidate onSubmit={formik.handleSubmit}>
               <Stack spacing={3}>
                 <TextField
-                  error={!!(formik.touched.name && formik.errors.name)}
+                  error={!!(formik.touched.firstName && formik.errors.firstName)}
                   fullWidth
-                  helperText={formik.touched.name && formik.errors.name}
-                  label="Name"
-                  name="name"
+                  helperText={formik.touched.firstName && formik.errors.firstName}
+                  label="First Name"
+                  name="firstName"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  value={formik.values.name}
+                  value={formik.values.firstName}
+                />
+                <TextField
+                  error={!!(formik.touched.lastName && formik.errors.lastName)}
+                  fullWidth
+                  helperText={formik.touched.lastName && formik.errors.lastName}
+                  label="Last Name"
+                  name="lastName"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  value={formik.values.lastName}
                 />
                 <TextField
                   error={!!(formik.touched.email && formik.errors.email)}
@@ -134,3 +164,4 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+

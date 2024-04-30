@@ -2,10 +2,14 @@ import { Box, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { Link, Outlet } from "react-router-dom";
 
 import Logo from "../../components/Logo";
+import useAuthGuard from "../../hooks/useAuthGuard";
+import { ToastContainer } from "react-toastify";
 
 const AuthLayout = () => {
+  useAuthGuard()
+
   return (
-    <Box
+    <><Box
       component="main"
       height={"100vh"}
       sx={{
@@ -51,8 +55,7 @@ const AuthLayout = () => {
           lg={6}
           sx={{
             alignItems: "center",
-            background:
-              "radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)",
+            background: "radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)",
             color: "white",
             display: "flex",
             justifyContent: "center",
@@ -85,6 +88,8 @@ const AuthLayout = () => {
         </Grid>
       </Grid>
     </Box>
+      <ToastContainer />
+    </>
   );
 };
 

@@ -33,7 +33,6 @@ const AccountPage = () => {
       addUser(user);
     } catch (error) {
       toast.error("Failed to update user");
-      console.log(error);
     } finally {
       setIsLoading(false)
     }
