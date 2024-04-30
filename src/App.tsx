@@ -4,22 +4,22 @@ import Helmet from "react-helmet";
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 
-import HomePage from "./containers/Home";
-import AppointmentPage from "./containers/Appointment";
+import HomePage from "./pages/Home";
+import AppointmentPage from "./pages/Appointment";
 import AuthLayout from "./layouts/Auth/AuthLayout";
-import LoginPage from "./containers/Auth/LoginPage";
-import RegisterPage from "./containers/Auth/RegisterPage";
-import NotFoundPage from "./containers/NotFound";
-import AccountPage from "./containers/Account";
+import LoginPage from "./pages/Auth/LoginPage";
+import RegisterPage from "./pages/Auth/RegisterPage";
+import NotFoundPage from "./pages/NotFound";
+import AccountPage from "./pages/Account";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import DashboardPage from "./containers/Dashboard";
+import DashboardPage from "./pages/Dashboard";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { AuthContext } from "./context/AuthContext";
 import { useEffect, useState } from "react";
 import { AuthService } from "./services";
-import { User } from "./models/User";
+import { IUser } from "./types/dto/user";
 import useAuthGuard from "./hooks/useAuthGuard";
 import Spinner from "./components/Spinner/Spinner";
 
@@ -44,9 +44,9 @@ const Fonts = () => (
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true)
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<IUser | null>(null)
 
-  const setUserData = (user: User | null) => {
+  const setUserData = (user: IUser | null) => {
     setUser(user)
   }
 

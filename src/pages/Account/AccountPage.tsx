@@ -13,14 +13,14 @@ import AccountProfile from "../../modules/Account/AccountProfile";
 import { AccountDetails } from "../../modules/Account/AccountDetails";
 import { updateUser } from "../../services/user.service";
 import useAuth from "../../hooks/useAuth";
-import { User } from "../../models/User";
+import { IUser } from "../../types/dto/user";
 import { useState } from "react";
 
 const AccountPage = () => {
   const { user, addUser } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleOnSubmitChanges = async (payload: Partial<User>) => {
+  const handleOnSubmitChanges = async (payload: Partial<IUser>) => {
     const { id } = user || {}
 
     try {
@@ -59,7 +59,6 @@ const AccountPage = () => {
               <Grid container spacing={3}>
                 <Grid xs={12} md={6} lg={4}>
                   <AccountProfile userDetails={user} />
-                  {JSON.stringify(user)}
                 </Grid>
                 <Grid xs={12} md={6} lg={8}>
                   <AccountDetails userDetails={user} isLoading={isLoading} onSubmit={handleOnSubmitChanges} />

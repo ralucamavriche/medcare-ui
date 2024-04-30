@@ -2,13 +2,11 @@ import {
   Alert,
   Box,
   Button,
-  FormHelperText,
   Link,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { useCallback } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
@@ -40,7 +38,7 @@ const LoginPage = () => {
 
         const user = await AuthService.login(email, password)
 
-        if(user) {
+        if (user) {
           addUser(user)
           navigate("/dashboard");
         }
@@ -57,8 +55,6 @@ const LoginPage = () => {
       }
     },
   });
-
-  const handleSkip = useCallback(() => { }, []);
 
   return (
     <>
@@ -122,9 +118,6 @@ const LoginPage = () => {
                   value={formik.values.password}
                 />
               </Stack>
-              <FormHelperText sx={{ mt: 1 }}>
-                Optionally you can skip.
-              </FormHelperText>
               {formik.errors.submit && (
                 <Typography color="error" sx={{ mt: 3 }} variant="body2">
                   {formik.errors.submit}
@@ -138,14 +131,6 @@ const LoginPage = () => {
                 variant="contained"
               >
                 Continue
-              </Button>
-              <Button
-                fullWidth
-                size="large"
-                sx={{ mt: 3 }}
-                onClick={handleSkip}
-              >
-                Skip authentication
               </Button>
               <Alert severity="info" sx={{ mt: 3 }}>
                 <div>

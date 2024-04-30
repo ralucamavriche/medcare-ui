@@ -14,7 +14,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { User } from "../../models/User";
+import { IUser } from "../../types/dto/user";
 
 const CITIES = [
   {
@@ -39,7 +39,7 @@ const CITIES = [
   },
 ];
 
-const INITIAL_STATE: User = {
+const INITIAL_STATE: IUser = {
   firstName: "",
   lastName: "",
   email: "",
@@ -52,11 +52,11 @@ const INITIAL_STATE: User = {
 export const AccountDetails = (props: any) => {
   const { userDetails, onSubmit, isLoading } = props
 
-  const [values, setValues] = useState<User>(
+  const [values, setValues] = useState<IUser>(
     INITIAL_STATE
   );
 
-  const [changedFields, setChangedFields] = useState<Partial<User>>({})
+  const [changedFields, setChangedFields] = useState<Partial<IUser>>({})
 
   useEffect(() => {
     setValues({

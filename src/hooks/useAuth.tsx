@@ -1,12 +1,12 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import { User } from "../models/User";
+import { IUser } from "../types/dto/user";
 import { AuthService } from "../services";
 
 const useAuth = () => {
     const { user, setUser } = useContext(AuthContext);
 
-    const addUser = (user: User) => {
+    const addUser = (user: IUser) => {
         setUser(user);
     };
 

@@ -1,9 +1,9 @@
 import { createContext } from "react";
-import { User } from "../models/User";
+import { IUser } from "../types/dto/user";
 
 interface AuthContext {
-    user: User | null;
-    setUser: (user: User | null) => void;
+    user: IUser | null;
+    setUser: (user: IUser | null) => void;
 }
 
 export const AuthContext = createContext<AuthContext>({

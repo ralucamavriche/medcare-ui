@@ -7,10 +7,10 @@ import {
   Divider,
   Typography,
 } from "@mui/material";
-import { User } from "../../models/User";
+import { IUser } from "../../types/dto/user";
 
 interface IAccountProfile {
-  userDetails: User | null
+  userDetails: IUser | null
 }
 
 const AccountProfile = (props: IAccountProfile) => {
