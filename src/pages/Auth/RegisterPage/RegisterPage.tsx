@@ -34,24 +34,26 @@ const RegisterPage = () => {
       password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: async (values, helpers) => {
-      
+
       try {
         const { firstName, lastName, email, password } = values
 
         const user = await AuthService.register(firstName, lastName, email, password)
-
-        if (user) {
-          addUser(user)
-          navigate("/dashboard");
+        if (!user) {
+          throw new Error('Failed to register. The data are incorrect. Password must be at least 8 characters!')
         }
+        addUser(user)
+        navigate("/dashboard");
+        
       } catch (err) {
         if (err instanceof Error) {
-          alert(err)
+          toast.error(err.message);
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: err.message });
           helpers.setSubmitting(false);
 
         } else {
+          toast.error("An unknown error occurred.");
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: "An unknown error occurred." });
           helpers.setSubmitting(false);

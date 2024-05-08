@@ -13,7 +13,12 @@ import { EventImpl } from "@fullcalendar/core/internal";
 import {
   getAppointmentById,
   createAppointment,
+  deleteAppointment
 } from "../../../services/appointment.service";
+import { IAppointment } from "../../../types/dto/appointment";
+import Spinner from "../../../components/Spinner/Spinner";
+
+import { toast } from 'react-toastify';
 
 const defaultEventInput: EventInput = {
   type: OperationEvent.ADD,
@@ -26,9 +31,8 @@ const defaultEventInput: EventInput = {
 };
 
 const CalendarModule = () => {
-  //SET appointment
   const [appointment, setAppointment] = useState({});
-  const [isLoading, setIsloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   const [events, setEvents] = useState<EventInput[]>([]);
   const [showEventModal, setShowEventModal] = useState<boolean>(false);
   const [currentEvent, setCurrentEvent] =
@@ -38,7 +42,7 @@ const CalendarModule = () => {
 
   useEffect(() => {
     setEvents(INITIAL_EVENTS);
-    setIsloading(true);
+    setIsLoading(true);
     //GET appointment by ID
     const fetchAppointmentById = async () => {
       try {
@@ -51,9 +55,7 @@ const CalendarModule = () => {
       }
     };
 
-
     fetchAppointmentById();
-    // createAppointmentEvent();
   }, []);
 
   const handleOnCreateEvent = () => {
@@ -61,8 +63,7 @@ const CalendarModule = () => {
   };
 
   const handleOnConfirmEvent = async (event: EventInput) => {
-    //TO DO: typescript interface
-    const payload = {
+    const payload: IAppointment = {
       title: event.title,
       description: event.description,
       startDate: event.start,
@@ -70,39 +71,61 @@ const CalendarModule = () => {
       author: "Tomas Popescu",
     };
 
-    //Start loding
     try {
+      if (!payload.title || !payload.description) {
+        throw new Error('Failed to submit changes. The title or description not defined')
+      }
+      // setIsLoading(true);
       await createAppointment(payload);
       // setAppointment(appointment);
       calendarRef.current?.getApi().addEvent(event);
       setShowEventModal(false);
       setCurrentEvent(defaultEventInput);
+      toast.success("Appointment Successfully created!");
+
     } catch (error) {
-      console.log(error);
+      toast.error("Failed to create the appointment");
+
+    } finally {
+      // setIsLoading(false)
     }
-    //End loding
-    // console.log("right before add", event);
-    // calendarRef.current?.getApi().addEvent(event);
-    // setShowEventModal(false);
-    // setCurrentEvent(defaultEventInput);
   };
 
-  const handleOnRemoveEvent = (eventImpl: EventImpl) => {
-    setShowEventModal(false);
-    setCurrentEvent(defaultEventInput);
-    eventImpl.remove();
+  const handleOnRemoveEvent = async (eventImpl: EventImpl) => {
+    try {
+      // if (!appoimentId) {
+      //   throw new Error('Failed to submit changes. The id not defined')
+      // }
+      // console.log(JSON.stringify(eventImpl))
+      // await deleteAppointment(id);
+      setShowEventModal(false);
+      setCurrentEvent(defaultEventInput);
+      eventImpl.remove();
+      toast.success("Appointment Successfully deleted!");
+
+    } catch (error) {
+      toast.error("Failed to delete the appointment");
+    }
+
   };
 
   const handleOnUpdateEvent = (event: EventImpl, newEventInfo: EventInput) => {
     const { title, start, end, description, backgroundColor } = newEventInfo;
 
-    setShowEventModal(false);
-    setCurrentEvent(defaultEventInput);
-    event.setProp("title", title);
-    event.setExtendedProp("description", description);
-    event.setStart(start!);
-    event.setEnd(end!);
-    event.setProp("backgroundColor", backgroundColor);
+    try {
+      setShowEventModal(false);
+      setCurrentEvent(defaultEventInput);
+      event.setProp("title", title);
+      event.setExtendedProp("description", description);
+      event.setStart(start!);
+      event.setEnd(end!);
+      event.setProp("backgroundColor", backgroundColor);
+      toast.success("Appointment Successfully updated!");
+    } catch (error) {
+      toast.error("Failed to update the appointment");
+    }
+
+
   };
 
   const handleOnDateSelect = (selectInfo: DateSelectArg) => {
@@ -142,8 +165,7 @@ const CalendarModule = () => {
   };
 
   if (!isLoading) {
-    // TODO: Add Loading spin
-    return <span>loading</span>;
+    return <Spinner />
   }
 
   return (

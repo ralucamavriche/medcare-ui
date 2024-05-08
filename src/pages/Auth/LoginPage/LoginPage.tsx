@@ -14,6 +14,7 @@ import * as ReactRouter from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { AuthService } from '../../../services'
 import useAuth from "../../../hooks/useAuth";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const { addUser } = useAuth()
@@ -37,17 +38,19 @@ const LoginPage = () => {
         const { email, password } = values
 
         const user = await AuthService.login(email, password)
-
-        if (user) {
-          addUser(user)
-          navigate("/dashboard");
+        if (!user) {
+          throw new Error('Failed to login. The email or password is incorrect!')
         }
+        addUser(user)
+        navigate("/dashboard");
       } catch (err) {
         if (err instanceof Error) {
+          toast.error(err.message);
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: err.message });
           helpers.setSubmitting(false);
         } else {
+          toast.error("An unknown error occurred.");
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: "An unknown error occurred." });
           helpers.setSubmitting(false);
