@@ -15,6 +15,8 @@ const useAuth = () => {
         setUser(null);
     };
 
+    
+
     return { user, addUser, removeUser };
 };
 

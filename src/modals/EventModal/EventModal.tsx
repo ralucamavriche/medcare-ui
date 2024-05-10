@@ -20,7 +20,7 @@ import { EventImpl } from "@fullcalendar/core/internal";
 interface EventModalProps {
   event: EventInput;
   open: boolean;
-  handleOnConfirm: (event: EventInput) => void;
+  handleOnCreate: (event: EventInput) => void;
   handleOnClose: () => void;
   handleOnRemove: (event: EventImpl) => void;
   handleOnUpdate: (event: EventImpl, newEvent: EventInput) => void;
@@ -32,7 +32,7 @@ interface InitialValuesProps {
   end: DateInput;
 }
 
-const initialValues: InitialValuesProps = {
+const INITIAL_VALUES: InitialValuesProps = {
   title: "",
   description: "",
   start: moment().format(),
@@ -43,7 +43,7 @@ const EventModal = ({
   open,
   event,
   handleOnClose,
-  handleOnConfirm,
+  handleOnCreate,
   handleOnRemove,
   handleOnUpdate,
 }: EventModalProps) => {
@@ -51,7 +51,7 @@ const EventModal = ({
   const shadowMedium = theme.shadows[5];
   const backgroundColorEvent = theme.palette;
 
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(INITIAL_VALUES);
 
   useEffect(() => {
     setValues({
@@ -74,7 +74,7 @@ const EventModal = ({
     boxShadow: shadowMedium,
   };
 
-  const onConfirm = () => {
+  const onCreate = () => {
     const { title, start, description, end } = values;
 
     const event: EventInput = {
@@ -86,23 +86,24 @@ const EventModal = ({
       backgroundColor: backgroundColorEvent.warning.main,
     };
 
-    handleOnConfirm(event);
-    setValues(initialValues);
+    handleOnCreate(event);
+    setValues(INITIAL_VALUES);
   };
 
   const onUpdate = () => {
     const { title, start, description, end } = values;
 
-    const newEvent: EventInput = {
+    const updatedEvent: Partial<EventInput> = {
       title,
       start,
       description,
       end,
+      color: "white",
       backgroundColor: backgroundColorEvent.error.main,
     };
 
-    handleOnUpdate(event.eventImpl, newEvent);
-    setValues(initialValues);
+    handleOnUpdate(event.eventImpl, updatedEvent);
+    setValues(INITIAL_VALUES);
   };
 
   const { title, start, description, end } = values;
@@ -176,7 +177,7 @@ const EventModal = ({
                 const newDate = data ? data.format() : moment().format();
                 setValues({
                   ...values,
-                  start: newDate,
+                  end: newDate,
                 });
               }}
               label="End Date"
@@ -196,10 +197,10 @@ const EventModal = ({
               <Button
                 variant="contained"
                 onClick={
-                  event.type === OperationEvent.ADD ? onConfirm : onUpdate
+                  event.type === OperationEvent.ADD ? onCreate : onUpdate
                 }
               >
-                Confirm
+                {event.type === OperationEvent.ADD ? 'Create' : 'Update'}
               </Button>
             </Stack>
           </Stack>

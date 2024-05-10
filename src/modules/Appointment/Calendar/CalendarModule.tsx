@@ -1,26 +1,48 @@
+import { useEffect, useRef, useState } from "react";
 import { Box, Button, Container, Stack, SvgIcon } from "@mui/material";
 import { DateSelectArg, EventClickArg, EventInput } from "@fullcalendar/core";
-import { Helmet } from "react-helmet";
-import Calendar from "./Calendar";
-import { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
-import { INITIAL_EVENTS } from "./event-utils";
-import { Add } from "@mui/icons-material";
-import EventModal from "../../../modals/EventModal";
-import moment from "moment";
-import { OperationEvent } from "../../../constants";
-import { EventImpl } from "@fullcalendar/core/internal";
-import {
-  getAppointmentById,
-  createAppointment,
-  deleteAppointment
-} from "../../../services/appointment.service";
-import { IAppointment } from "../../../types/dto/appointment";
-import Spinner from "../../../components/Spinner/Spinner";
-
 import { toast } from 'react-toastify';
+import { Add } from "@mui/icons-material";
+import moment from "moment";
+import { EventImpl } from "@fullcalendar/core/internal";
 
-const defaultEventInput: EventInput = {
+import Calendar from "./Calendar";
+import EventModal from "../../../modals/EventModal";
+import { OperationEvent } from "../../../constants";
+import { AppointmentService } from "../../../services";
+import Spinner from "../../../components/Spinner/Spinner";
+import useAuth from "../../../hooks/useAuth";
+import { RequestAppointment } from "../../../types/dto/appointment";
+
+const STATUSES =  {
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  ACCEPTED: 'ACCEPTED'
+}
+
+const BACKGROUND_COLOR_BASED_ON_STATUS = {
+  [STATUSES.PENDING]: {
+    backgroundColor: 'gray',
+    borderColor: 'gray',
+    textColor: 'white'
+  },
+  [STATUSES.REJECTED]: {
+    backgroundColor: 'red',
+    borderColor: 'red',
+    textColor: 'white'
+  },
+  [STATUSES.ACCEPTED]: {
+    backgroundColor: 'green',
+    borderColor: 'green',
+    textColor: 'white'
+  }
+}
+
+interface ICalendarModule {
+}
+
+const DEFAULT_EVENT_INPUT: EventInput = {
   type: OperationEvent.ADD,
   title: "",
   description: "",
@@ -30,101 +52,129 @@ const defaultEventInput: EventInput = {
   eventImpl: null,
 };
 
-const CalendarModule = () => {
-  const [appointment, setAppointment] = useState({});
-  const [isLoading, setIsLoading] = useState(false)
-  const [events, setEvents] = useState<EventInput[]>([]);
+const CalendarModule = (_: ICalendarModule) => {
+  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [showEventModal, setShowEventModal] = useState<boolean>(false);
+  const [events, setEvents] = useState<EventInput[] | null>(null);
   const [currentEvent, setCurrentEvent] =
-    useState<EventInput>(defaultEventInput);
+    useState<EventInput>(DEFAULT_EVENT_INPUT);
 
   const calendarRef = useRef<FullCalendar | null>(null);
 
+  const { id: userId, firstName, lastName } = user || {}
+
+  if (!userId) {
+    throw new Error('User is not defined')
+  }
+
   useEffect(() => {
-    setEvents(INITIAL_EVENTS);
     setIsLoading(true);
-    //GET appointment by ID
-    const fetchAppointmentById = async () => {
+    const fetchApoimentsByUserId = async (userId: string) => {
       try {
-        const appointment = await getAppointmentById(
-          "65e1ee5b6f2427e980093f31"
-        );
-        setAppointment(appointment);
+        const appointments = await AppointmentService.getAppointmentsByUserId(userId);
+        const status = 'PENDING'
+        const formattedAppointments: Partial<EventInput>[] = appointments.map(({ id, title, startDate, endDate, description }) => ({
+          id,
+          title,
+          start: startDate,
+          end: endDate,
+          description,
+          status,
+          ...BACKGROUND_COLOR_BASED_ON_STATUS[status]
+        }))
+
+        setEvents(formattedAppointments)
       } catch (error) {
-        console.log(error);
+        setEvents([])
+        console.error(`Failed to AppointmentService.getAppointmentsByUserId: ${(error as Error)?.message}`);
+        // TODO: Show error with notify like: 'Something went wrong'
       }
-    };
+    }
 
-    fetchAppointmentById();
-  }, []);
+    fetchApoimentsByUserId(userId)
+  }, [userId]);
 
-  const handleOnCreateEvent = () => {
-    setShowEventModal(true);
-  };
-
-  const handleOnConfirmEvent = async (event: EventInput) => {
-    const payload: IAppointment = {
-      title: event.title,
+  const handleOnCreateEvent = async (event: EventInput) => {
+    console.log(event)
+    const payload: RequestAppointment = {
+      title: event.title || '',
       description: event.description,
       startDate: event.start,
       endDate: event.end,
-      author: "Tomas Popescu",
+      author: `${firstName} ${lastName}`,
+      userId: userId,
+      // status: 'PENDING' TODO: Add status in DB
     };
 
     try {
-      if (!payload.title || !payload.description) {
-        throw new Error('Failed to submit changes. The title or description not defined')
-      }
-      // setIsLoading(true);
-      await createAppointment(payload);
-      // setAppointment(appointment);
+      const appointment = await AppointmentService.createAppointment(payload);
+      event.id = appointment.id
+
       calendarRef.current?.getApi().addEvent(event);
       setShowEventModal(false);
-      setCurrentEvent(defaultEventInput);
+      setCurrentEvent(DEFAULT_EVENT_INPUT);
       toast.success("Appointment Successfully created!");
-
     } catch (error) {
-      toast.error("Failed to create the appointment");
+      console.error(`Failed to AppointmentService.createAppointment: ${(error as Error)?.message}`)
+      toast.error(`Failed to create the appointment`);
+    }
+  };
 
+  const handleOnUpdateEvent = async (eventImpl: EventImpl, eventInput: EventInput) => {
+    const { id } = eventImpl
+    const { title, start, end, description, backgroundColor } = eventInput;
+
+    try {
+      if(!id) {
+        throw new Error('Id not defined')
+      }
+
+      const payload: RequestAppointment = {
+        title: eventInput.title || '',
+        description: eventInput.description,
+        startDate: eventInput.start,
+        endDate: eventInput.end,
+        author: `${firstName} ${lastName}`
+        // status: 'PENDING' TODO: Add status in DB
+        // backgroundColor: 'red' TODO: Add backgroundColor in DB
+      };
+
+      await AppointmentService.updateAppointment(id, payload);
+
+      eventImpl.setProp("title", title);
+      eventImpl.setExtendedProp("description", description);
+      eventImpl.setStart(start!);
+      eventImpl.setEnd(end!);
+      eventImpl.setProp("backgroundColor", backgroundColor);
+
+      setShowEventModal(false);
+      toast.success("Appointment Successfully updated!");
+    } catch (error) {
+      console.error(`Failed to update the appointment: ${(error as Error)?.message}`)
+      toast.error(`Failed to update the appointment: ${(error as Error)?.message}`);
     } finally {
-      // setIsLoading(false)
     }
   };
 
   const handleOnRemoveEvent = async (eventImpl: EventImpl) => {
+    const { id } = eventImpl
+
     try {
-      // if (!appoimentId) {
-      //   throw new Error('Failed to submit changes. The id not defined')
-      // }
-      // console.log(JSON.stringify(eventImpl))
-      // await deleteAppointment(id);
-      setShowEventModal(false);
-      setCurrentEvent(defaultEventInput);
+      if (!id) {
+        throw new Error('Id not found')
+      }
+
+      await AppointmentService.deleteAppointment(id);
+
       eventImpl.remove();
-      toast.success("Appointment Successfully deleted!");
 
-    } catch (error) {
-      toast.error("Failed to delete the appointment");
-    }
-
-  };
-
-  const handleOnUpdateEvent = (event: EventImpl, newEventInfo: EventInput) => {
-    const { title, start, end, description, backgroundColor } = newEventInfo;
-
-    try {
       setShowEventModal(false);
-      setCurrentEvent(defaultEventInput);
-      event.setProp("title", title);
-      event.setExtendedProp("description", description);
-      event.setStart(start!);
-      event.setEnd(end!);
-      event.setProp("backgroundColor", backgroundColor);
-      toast.success("Appointment Successfully updated!");
+      toast.success("Appointment Successfully deleted!");
     } catch (error) {
-      toast.error("Failed to update the appointment");
+      console.error(`Failed to delete the appointment: ${(error as Error)?.message}`)
+      toast.error(`Failed to delete the appointment: ${(error as Error)?.message}`);
     }
-
 
   };
 
@@ -135,7 +185,7 @@ const CalendarModule = () => {
     calendarApi.unselect();
 
     const newEvent: EventInput = {
-      ...defaultEventInput,
+      ...DEFAULT_EVENT_INPUT,
       start: startStr,
       end: endStr,
       allDay,
@@ -150,7 +200,7 @@ const CalendarModule = () => {
     const { description } = extendedProps;
 
     const newEvent: EventInput = {
-      ...defaultEventInput,
+      ...DEFAULT_EVENT_INPUT,
       type: OperationEvent.EDIT,
       eventImpl: clickInfo.event,
       title,
@@ -164,60 +214,57 @@ const CalendarModule = () => {
     setShowEventModal(true);
   };
 
-  if (!isLoading) {
+  if (!isLoading || !events) {
     return <Spinner />
   }
 
   return (
-    <>
-      <Helmet>
-        <title>Calendar</title>
-      </Helmet>
-      {JSON.stringify({ appointment })}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          pt: 10,
-          pb: 10,
-        }}
-      >
-        <Container maxWidth="lg">
-          <Stack spacing={2}>
-            <Stack
-              display="flex"
-              justifyContent="flex-end"
-              sx={{
-                flexDirection: "row",
-              }}
-            >
-              <Stack direction="row" spacing={1}>
-                <Button variant="contained" onClick={handleOnCreateEvent}>
-                  <SvgIcon fontSize="small">
-                    <Add />
-                  </SvgIcon>
-                  New Event
-                </Button>
-              </Stack>
+    <Box
+      component="main"
+      sx={{
+        flexGrow: 1,
+        pt: 10,
+        pb: 10,
+      }}
+    >
+      <Container maxWidth="lg">
+        <Stack spacing={2}>
+          <Stack
+            display="flex"
+            justifyContent="flex-end"
+            sx={{
+              flexDirection: "row",
+            }}
+          >
+            <Stack direction="row" spacing={1}>
+              <Button variant="contained" onClick={() => setShowEventModal(true)}>
+                <SvgIcon fontSize="small">
+                  <Add />
+                </SvgIcon>
+                New Event
+              </Button>
             </Stack>
-            <Calendar
-              handleOnEventClick={handleOnEventClick}
-              handleOnDateSelect={handleOnDateSelect}
-              initialEvents={events}
-              ref={calendarRef}
-            />
           </Stack>
-          <EventModal
-            open={showEventModal}
-            event={currentEvent}
-            handleOnClose={() => setShowEventModal(false)}
-            handleOnConfirm={handleOnConfirmEvent}
-            handleOnRemove={handleOnRemoveEvent}
-            handleOnUpdate={handleOnUpdateEvent}
+          <Calendar
+            handleOnEventClick={handleOnEventClick}
+            handleOnDateSelect={handleOnDateSelect}
+            initialEvents={events}
+            ref={calendarRef}
           />
-        </Container>
-      </Box>
-    </>
+        </Stack>
+        <EventModal
+          open={showEventModal}
+          event={currentEvent}
+          handleOnClose={() => {
+            setShowEventModal(false)
+            setCurrentEvent(DEFAULT_EVENT_INPUT)
+          }}
+          handleOnCreate={handleOnCreateEvent}
+          handleOnRemove={handleOnRemoveEvent}
+          handleOnUpdate={handleOnUpdateEvent}
+        />
+      </Container>
+    </Box>
   );
 };
 

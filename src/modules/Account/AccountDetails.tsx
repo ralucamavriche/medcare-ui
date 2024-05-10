@@ -49,7 +49,13 @@ const INITIAL_STATE: IUser = {
   country: "",
 }
 
-export const AccountDetails = (props: any) => {
+interface IAccountDetails {
+  userDetails: IUser | null,
+  onSubmit: any,
+  isLoading: boolean
+}
+
+export const AccountDetails = (props: IAccountDetails) => {
   const { userDetails, onSubmit, isLoading } = props
 
   const [values, setValues] = useState<IUser>(

@@ -10,7 +10,6 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Paper, useTheme } from "@mui/material";
-
 import "./index.css";
 
 interface CalendarProps {
@@ -19,6 +18,16 @@ interface CalendarProps {
   handleOnEventClick: (clickInfo: EventClickArg) => void;
 }
 
+const renderEventContent = ({timeText, event: { title}}: EventContentArg) => {
+  // TODO: This is where you style the event eg. 3ad
+  return (
+    <>
+      {/* <b>{timeText}</b> */}
+      <i>{title}</i>
+    </>
+  );
+};
+
 const Calendar = forwardRef(
   (
     { initialEvents, handleOnDateSelect, handleOnEventClick }: CalendarProps,
@@ -26,15 +35,6 @@ const Calendar = forwardRef(
   ) => {
     const theme = useTheme();
     const shadowMedium = theme.shadows[5];
-
-    const renderEventContent = (eventContent: EventContentArg) => {
-      return (
-        <>
-          <b>{eventContent.timeText}</b>
-          <i>{eventContent.event.title}</i>
-        </>
-      );
-    };
 
     return (
       <Paper
@@ -57,7 +57,7 @@ const Calendar = forwardRef(
             center: "prev,next today",
             end: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
-          initialView="dayGridMonth"
+          initialView="timeGridWeek"
           editable={true}
           selectable={true}
           selectMirror={true}
