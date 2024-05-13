@@ -15,7 +15,7 @@ import Spinner from "../../../components/Spinner/Spinner";
 import useAuth from "../../../hooks/useAuth";
 import { RequestAppointment } from "../../../types/dto/appointment";
 
-const STATUSES =  {
+const STATUSES = {
   PENDING: 'PENDING',
   REJECTED: 'REJECTED',
   ACCEPTED: 'ACCEPTED'
@@ -23,8 +23,8 @@ const STATUSES =  {
 
 const BACKGROUND_COLOR_BASED_ON_STATUS = {
   [STATUSES.PENDING]: {
-    backgroundColor: 'gray',
-    borderColor: 'gray',
+    backgroundColor: '#FFA500',
+    borderColor: '#FFA500',
     textColor: 'white'
   },
   [STATUSES.REJECTED]: {
@@ -46,11 +46,11 @@ const DEFAULT_EVENT_INPUT: EventInput = {
   type: OperationEvent.ADD,
   title: "",
   description: "",
-  start: moment().format(),
-  end: moment().format(),
   allDay: false,
   eventImpl: null,
 };
+
+
 
 const CalendarModule = (_: ICalendarModule) => {
   const { user } = useAuth();
@@ -88,7 +88,7 @@ const CalendarModule = (_: ICalendarModule) => {
       } catch (error) {
         setEvents([])
         console.error(`Failed to AppointmentService.getAppointmentsByUserId: ${(error as Error)?.message}`);
-        // TODO: Show error with notify like: 'Something went wrong'
+        toast.error(`Something went wrong:  ${(error as Error)?.message}`);
       }
     }
 
@@ -96,7 +96,6 @@ const CalendarModule = (_: ICalendarModule) => {
   }, [userId]);
 
   const handleOnCreateEvent = async (event: EventInput) => {
-    console.log(event)
     const payload: RequestAppointment = {
       title: event.title || '',
       description: event.description,
@@ -104,41 +103,44 @@ const CalendarModule = (_: ICalendarModule) => {
       endDate: event.end,
       author: `${firstName} ${lastName}`,
       userId: userId,
-      // status: 'PENDING' TODO: Add status in DB
+      status: 'PENDING'
     };
 
     try {
-      const appointment = await AppointmentService.createAppointment(payload);
-      event.id = appointment.id
+      // const validateTimeFrameAppointment = validateTimeRange(payload.startDate, payload.endDate);
+        const appointment = await AppointmentService.createAppointment(payload);
+        event.id = appointment.id
 
-      calendarRef.current?.getApi().addEvent(event);
-      setShowEventModal(false);
-      setCurrentEvent(DEFAULT_EVENT_INPUT);
-      toast.success("Appointment Successfully created!");
+        calendarRef.current?.getApi().addEvent(event);
+        setShowEventModal(false);
+        setCurrentEvent(DEFAULT_EVENT_INPUT);
+        toast.success("Appointment Successfully created!");
+
     } catch (error) {
       console.error(`Failed to AppointmentService.createAppointment: ${(error as Error)?.message}`)
-      toast.error(`Failed to create the appointment`);
+      toast.error(`Failed to create the appointment! ${(error as Error)?.message}`);
     }
   };
 
   const handleOnUpdateEvent = async (eventImpl: EventImpl, eventInput: EventInput) => {
     const { id } = eventImpl
-    const { title, start, end, description, backgroundColor } = eventInput;
+    const { title, start, end, description } = eventInput;
 
     try {
-      if(!id) {
+      if (!id) {
         throw new Error('Id not defined')
       }
 
+      const status = 'REJECTED'
       const payload: RequestAppointment = {
         title: eventInput.title || '',
         description: eventInput.description,
         startDate: eventInput.start,
         endDate: eventInput.end,
-        author: `${firstName} ${lastName}`
-        // status: 'PENDING' TODO: Add status in DB
-        // backgroundColor: 'red' TODO: Add backgroundColor in DB
+        author: `${firstName} ${lastName}`,
+        status: status
       };
+      console.log(JSON.stringify(payload));
 
       await AppointmentService.updateAppointment(id, payload);
 
@@ -146,7 +148,7 @@ const CalendarModule = (_: ICalendarModule) => {
       eventImpl.setExtendedProp("description", description);
       eventImpl.setStart(start!);
       eventImpl.setEnd(end!);
-      eventImpl.setProp("backgroundColor", backgroundColor);
+      eventImpl.setProp("backgroundColor", BACKGROUND_COLOR_BASED_ON_STATUS[status]);
 
       setShowEventModal(false);
       toast.success("Appointment Successfully updated!");
@@ -191,6 +193,8 @@ const CalendarModule = (_: ICalendarModule) => {
       allDay,
     };
 
+    console.log(newEvent)
+
     setCurrentEvent(newEvent);
     setShowEventModal(true);
   };
@@ -209,6 +213,7 @@ const CalendarModule = (_: ICalendarModule) => {
       end: endStr,
       allDay,
     };
+    console.log(newEvent)
 
     setCurrentEvent(newEvent);
     setShowEventModal(true);
@@ -252,7 +257,8 @@ const CalendarModule = (_: ICalendarModule) => {
             ref={calendarRef}
           />
         </Stack>
-        <EventModal
+        {
+          showEventModal && <EventModal
           open={showEventModal}
           event={currentEvent}
           handleOnClose={() => {
@@ -263,6 +269,8 @@ const CalendarModule = (_: ICalendarModule) => {
           handleOnRemove={handleOnRemoveEvent}
           handleOnUpdate={handleOnUpdateEvent}
         />
+        }
+        
       </Container>
     </Box>
   );

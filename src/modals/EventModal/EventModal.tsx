@@ -10,12 +10,17 @@ import {
   useTheme,
   SvgIcon,
 } from "@mui/material";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { DateInput, EventInput } from "@fullcalendar/core";
 import { Delete } from "@mui/icons-material";
 import { OperationEvent } from "../../constants";
 import { EventImpl } from "@fullcalendar/core/internal";
+import { toast } from "react-toastify";
+import { DateTimeValidationError } from "@mui/x-date-pickers";
+import { isValidDuration } from "../../utils/date";
 
 interface EventModalProps {
   event: EventInput;
@@ -28,16 +33,39 @@ interface EventModalProps {
 interface InitialValuesProps {
   title: string;
   description: string;
-  start: DateInput;
-  end: DateInput;
+  start?: any;
+  end?: any;
+}
+interface DateErrors {
+  start?: string | null;
+  end?: string | null;
 }
 
 const INITIAL_VALUES: InitialValuesProps = {
   title: "",
   description: "",
-  start: moment().format(),
-  end: moment().format(),
 };
+
+const generateDateError = (error?: string | null) => {
+  switch (error) {
+    case 'minDate':
+    case 'maxDate':
+      return 'Max Date reached'
+    case 'disablePast': 
+      return 'Date cannot be in the past'
+    case 'invalidDate':
+        return 'Invalid Date'
+    default:
+      return error
+  }
+}
+
+const VALIDATION_SCHEMA = Yup.object({
+  title: Yup.string().required('Title is required'),
+  description: Yup.string().required('Description is required'),
+  start: Yup.date().required('Start date is required'),
+  end: Yup.date().required('End date is required')
+})
 
 const EventModal = ({
   open,
@@ -51,15 +79,31 @@ const EventModal = ({
   const shadowMedium = theme.shadows[5];
   const backgroundColorEvent = theme.palette;
 
-  const [values, setValues] = useState(INITIAL_VALUES);
+  const [dateErrors, setDateErrors] = useState<DateErrors>({})
+  const formik = useFormik({
+    initialValues: INITIAL_VALUES,
+    validationSchema: VALIDATION_SCHEMA,
+    onSubmit: async (values) => {
+      try {
+        console.log(values)
+      } catch (error) {
+        toast.error(`Error occured while submiting the form: ${(error as Error)?.message}`);
+      }
+    }
+  })
 
   useEffect(() => {
-    setValues({
-      title: event.title!,
-      description: event.description,
-      start: event.start!,
-      end: event.end!,
-    });
+
+    if(event) {
+      console.log('useEffect2', event.start)
+      formik.setValues({
+        ...formik.values,
+        title: event.title!,
+        description: event.description,
+        start: moment(event.start),
+        end: moment(event.end)
+      })
+    }
   }, [event]);
 
   const style = {
@@ -75,11 +119,11 @@ const EventModal = ({
   };
 
   const onCreate = () => {
-    const { title, start, description, end } = values;
+    const { title, description, end } = formik.values;
 
     const event: EventInput = {
       title,
-      start,
+      start: formik.values?.start,
       description,
       end,
       color: "white",
@@ -87,126 +131,160 @@ const EventModal = ({
     };
 
     handleOnCreate(event);
-    setValues(INITIAL_VALUES);
   };
 
   const onUpdate = () => {
-    const { title, start, description, end } = values;
+    const { title, description } = formik.values;
 
     const updatedEvent: Partial<EventInput> = {
       title,
-      start,
+      start: formik.values?.start && formik.values?.start.format(),
       description,
-      end,
+      end: formik.values?.end && formik.values?.end.format(),
       color: "white",
       backgroundColor: backgroundColorEvent.error.main,
     };
 
     handleOnUpdate(event.eventImpl, updatedEvent);
-    setValues(INITIAL_VALUES);
   };
-
-  const { title, start, description, end } = values;
-
+  
   return (
-    <Modal
-      open={open}
-      onClose={handleOnClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={style}>
-        <Typography
-          variant="h5"
-          sx={{
-            mb: 5,
-            mt: 2,
-            textAlign: "center",
-          }}
+    <>
+      <form>
+        <Modal
+          open={open}
+          onClose={handleOnClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
         >
-          {event.type === OperationEvent.ADD ? "Add Event" : "Edit Event"}
-        </Typography>
-        <Stack spacing={2}>
-          <TextField
-            fullWidth
-            label="Title"
-            name="title"
-            value={title}
-            onChange={(
-              event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) =>
-              setValues({
-                ...values,
-                title: event.target.value,
-              })
-            }
-            type="text"
-          />
-          <TextField
-            fullWidth
-            label="Description"
-            name="description"
-            value={description}
-            onChange={(
-              event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-            ) =>
-              setValues({
-                ...values,
-                description: event.target.value,
-              })
-            }
-            type="text"
-          />
-          <DemoContainer components={["DateTimePicker"]}>
-            <DateTimePicker
-              value={start ? moment(start) : moment()}
-              onChange={(data) => {
-                const newDate = data ? data.format() : moment().format();
-                setValues({
-                  ...values,
-                  start: newDate,
-                });
+          <Box sx={style}>
+            <Typography
+              variant="h5"
+              sx={{
+                mb: 5,
+                mt: 2,
+                textAlign: "center",
               }}
-              label="Start Date"
-            />
-          </DemoContainer>
-          <DemoContainer components={["DateTimePicker"]}>
-            <DateTimePicker
-              value={end ? moment(end) : moment()}
-              onChange={(data) => {
-                const newDate = data ? data.format() : moment().format();
-                setValues({
-                  ...values,
-                  end: newDate,
-                });
-              }}
-              label="End Date"
-            />
-          </DemoContainer>
-
-          <Stack direction="row" sx={{ justifyContent: "space-between" }}>
-            {event.type === OperationEvent.EDIT && (
-              <Button onClick={() => handleOnRemove(event.eventImpl)}>
-                <SvgIcon fontSize="medium">
-                  <Delete />
-                </SvgIcon>
-              </Button>
-            )}
-            <Stack direction="row" spacing={2}>
-              <Button onClick={handleOnClose}>Cancel</Button>
-              <Button
-                variant="contained"
-                onClick={
-                  event.type === OperationEvent.ADD ? onCreate : onUpdate
-                }
-              >
-                {event.type === OperationEvent.ADD ? 'Create' : 'Update'}
-              </Button>
+            >
+              {event.type === OperationEvent.ADD ? "Add Event" : "Edit Event"}
+            </Typography>
+            <Stack spacing={2}>
+              <TextField
+                error={!!(formik.touched.title && formik.errors.title)}
+                helperText={formik.touched.title && formik.errors.title}
+                fullWidth
+                label="Title"
+                name="title"
+                type="text"
+                value={formik.values.title}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+              />
+              <TextField
+                error={!!(formik.touched.description && formik.errors.description)}
+                helperText={formik.touched.description && formik.errors.description}
+                fullWidth
+                label="Description"
+                name="description"
+                type="text"
+                value={formik.values.description}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+              />
+              <DemoContainer components={["DateTimePicker"]}>
+                <DateTimePicker
+                  label="Start Date"
+                  disablePast
+                  value={formik.values.start}
+                  onChange={(value: any) => {
+                    setDateErrors({
+                      ...dateErrors,
+                      'start': ''
+                    })
+                    if(value && formik.values.end){
+                      const isValidRange = isValidDuration(value, formik.values.end)
+                      if(!isValidRange) {
+                        setDateErrors({
+                          ...dateErrors,
+                          'start': 'The appointment time needs to be 30 minutes'
+                        })
+                      }
+                    }
+                    return formik.setFieldValue('start', value)
+                  }}
+                  onError={(error: DateTimeValidationError) => {
+                    setDateErrors({
+                      ...dateErrors,
+                      'start': error
+                    })
+                  }}
+                  slotProps={{
+                    textField: {
+                      error: generateDateError(dateErrors.start) ? true : false,
+                      helperText: generateDateError(dateErrors.start),
+                    },
+                  }}
+                />
+              </DemoContainer>
+              <DemoContainer components={["DateTimePicker"]}>
+                <DateTimePicker
+                  label="End Date"
+                  disablePast
+                  value={formik.values.end}
+                  onChange={(value: any) => {
+                    setDateErrors({
+                      ...dateErrors,
+                      'end': ''
+                    })
+                    if(value && formik.values.start){
+                      const isValidRange = isValidDuration(formik.values.start, value)
+                      if(!isValidRange) {
+                        setDateErrors({
+                          ...dateErrors,
+                          'end': 'The appointment time needs to be 30 minutes'
+                        })
+                      }
+                    }
+                    return formik.setFieldValue('end', value)}}
+                  onError={(error: DateTimeValidationError) => setDateErrors({
+                    ...dateErrors,
+                    'end': error
+                  })}
+                  slotProps={{
+                    textField: {
+                      helperText: generateDateError(dateErrors.end),
+                    },
+                  }}
+                />
+              </DemoContainer>
+              <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+                {event.type === OperationEvent.EDIT && (
+                  <Button onClick={() => handleOnRemove(event.eventImpl)}>
+                    <SvgIcon fontSize="medium">
+                      <Delete />
+                    </SvgIcon>
+                  </Button>
+                )}
+                <Stack direction="row" spacing={2}>
+                  <Button onClick={handleOnClose}>Cancel</Button>
+                  <Button
+                    variant="contained"
+                    disabled={!formik.isValid || !!dateErrors.end || !!dateErrors.start}
+                    onClick={
+                      event.type === OperationEvent.ADD ? onCreate : onUpdate
+                    }
+                  >
+                    {event.type === OperationEvent.ADD ? 'Create' : 'Update'}
+                  </Button>
+                </Stack>
+              </Stack>
             </Stack>
-          </Stack>
-        </Stack>
-      </Box>
-    </Modal>
+          </Box>
+        </Modal>
+
+      </form>
+
+    </>
   );
 };
 

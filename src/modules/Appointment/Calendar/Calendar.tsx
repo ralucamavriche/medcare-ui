@@ -18,8 +18,15 @@ interface CalendarProps {
   handleOnEventClick: (clickInfo: EventClickArg) => void;
 }
 
-const renderEventContent = ({timeText, event: { title}}: EventContentArg) => {
+const renderEventContent = ({ timeText, event: { title } }: EventContentArg) => {
   // TODO: This is where you style the event eg. 3ad
+  // const startDate = start;
+  // const formattedStartDate = startDate.toLocaleDateString('en-US', {
+  //   weekday: 'long',
+  //   year: 'numeric',
+  //   month: 'long',
+  //   day: 'numeric'
+  // });
   return (
     <>
       {/* <b>{timeText}</b> */}
