@@ -2,10 +2,10 @@ import * as api from "../api/api";
 
 const MEDCARE_TOKEN = 'medcartoken'
 
-const GENERAL_ERROR = {
-    error: "Something went wrong!",
-    code: 500,
-};
+// const GENERAL_ERROR = {
+//     error: "Something went wrong!",
+//     code: 500,
+// };
 
 const saveToken = (token: string) => {
     return localStorage.setItem(MEDCARE_TOKEN, token)
@@ -57,9 +57,9 @@ export const login = async (email: string, password: string) => {
     }
 }
 
-export const register = async (firstName: string, lastName: string, email: string, password: string) => {
+export const register = async (firstName: string, lastName: string, email: string, password: string, medicalLicenseNumber: string) => {
     try {
-        const response = await api.post('/auth/register', { firstName,lastName, email, password })
+        const response = await api.post('/auth/register', { firstName, lastName, email, password, medicalLicenseNumber })
 
         if (response.status !== 201) {
             throw new Error('Failed to register')
@@ -68,8 +68,7 @@ export const register = async (firstName: string, lastName: string, email: strin
         saveToken(response.data.token)
         return response.data.user
     } catch (error: any) {
-        alert(error.response.data.error)
-        
+        throw new Error(error.response.data.error)
     }
 }
 

@@ -4,7 +4,6 @@ import { DateSelectArg, EventClickArg, EventInput } from "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/react";
 import { toast } from 'react-toastify';
 import { Add } from "@mui/icons-material";
-import moment from "moment";
 import { EventImpl } from "@fullcalendar/core/internal";
 
 import Calendar from "./Calendar";
@@ -73,8 +72,8 @@ const CalendarModule = (_: ICalendarModule) => {
     const fetchApoimentsByUserId = async (userId: string) => {
       try {
         const appointments = await AppointmentService.getAppointmentsByUserId(userId);
-        const status = 'PENDING'
-        const formattedAppointments: Partial<EventInput>[] = appointments.map(({ id, title, startDate, endDate, description }) => ({
+       
+        const formattedAppointments: Partial<EventInput>[] = appointments.map(({ id, title, startDate, endDate, description, status }) => ({
           id,
           title,
           start: startDate,
@@ -107,7 +106,6 @@ const CalendarModule = (_: ICalendarModule) => {
     };
 
     try {
-      // const validateTimeFrameAppointment = validateTimeRange(payload.startDate, payload.endDate);
         const appointment = await AppointmentService.createAppointment(payload);
         event.id = appointment.id
 
@@ -131,7 +129,7 @@ const CalendarModule = (_: ICalendarModule) => {
         throw new Error('Id not defined')
       }
 
-      const status = 'REJECTED'
+      const status = 'PENDING'
       const payload: RequestAppointment = {
         title: eventInput.title || '',
         description: eventInput.description,

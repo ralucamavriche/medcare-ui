@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import {
   Notifications,
-  PeopleAlt,
   Search,
   MoreVert,
+  ExitToApp
 } from "@mui/icons-material";
 import {
   Avatar,
@@ -14,20 +14,23 @@ import {
   SvgIcon,
   Tooltip,
   useMediaQuery,
-  Theme
+  Theme,
+  Link,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
+import useAuth from "../../hooks/useAuth";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
 
-interface NavbarProps{
-  onNavOpen?: React.MouseEventHandler<HTMLButtonElement> | undefined ;
+interface NavbarProps {
+  onNavOpen?: React.MouseEventHandler<HTMLButtonElement> | undefined;
 }
 
 export const Navbar = (props: NavbarProps) => {
   const { onNavOpen } = props;
   const lgUp = useMediaQuery<Theme>((theme: Theme) => theme.breakpoints.up("lg"));
+  const {removeUser } = useAuth();
 
   return (
     <>
@@ -75,13 +78,6 @@ export const Navbar = (props: NavbarProps) => {
             </Tooltip>
           </Stack>
           <Stack alignItems="center" direction="row" spacing={2}>
-            <Tooltip title="Contacts">
-              <IconButton>
-                <SvgIcon fontSize="small">
-                  <PeopleAlt />
-                </SvgIcon>
-              </IconButton>
-            </Tooltip>
             <Tooltip title="Notifications">
               <IconButton>
                 <Badge badgeContent={4} color="success" variant="dot">
@@ -91,7 +87,15 @@ export const Navbar = (props: NavbarProps) => {
                 </Badge>
               </IconButton>
             </Tooltip>
-            <Avatar
+              <Tooltip title="Logout">
+                <IconButton onClick={removeUser} href="/auth/login">
+                  <SvgIcon fontSize="small">
+                    <ExitToApp />
+                  </SvgIcon>
+                </IconButton>
+              </Tooltip>
+            <Link href="/dashboard/account">
+            <Avatar 
               sx={{
                 cursor: "pointer",
                 height: 40,
@@ -99,6 +103,7 @@ export const Navbar = (props: NavbarProps) => {
               }}
               src="/assets/avatars/avatar-anika-visser.png"
             />
+            </Link>
           </Stack>
         </Stack>
       </Box>

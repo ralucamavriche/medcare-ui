@@ -2,11 +2,9 @@ import { Box, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { Link, Outlet } from "react-router-dom";
 
 import Logo from "../../components/Logo";
-import useAuthGuard from "../../hooks/useAuthGuard";
 import { ToastContainer } from "react-toastify";
 
 const AuthLayout = () => {
-  useAuthGuard()
 
   return (
     <><Box

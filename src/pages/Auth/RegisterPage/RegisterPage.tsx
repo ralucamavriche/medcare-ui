@@ -1,4 +1,4 @@
-import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Link, Stack, Tab, Tabs, TextField, Typography } from "@mui/material";
 import * as ReactRouter from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -7,21 +7,21 @@ import { AuthService } from "../../../services";
 import useAuth from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { useCallback, useState } from 'react';
 
-
-// localStorage.setItem('user', "asdas")
-// undefined
-// localStorage.getItem('user') 
 const RegisterPage = () => {
   const { addUser } = useAuth()
   const navigate = useNavigate();
+  const [method, setMethod] = useState('user');
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      firstName: "",
-      lastName: "",
-      password: "",
+      email: "asd@yahoo.com",
+      firstName: "admin",
+      lastName: "admin",
+      password: "Password23.23",
+      medicalLicenseNumber: '',
+      isDoctor: false,
       submit: null,
     },
     validationSchema: Yup.object({
@@ -32,19 +32,24 @@ const RegisterPage = () => {
       firstName: Yup.string().max(255).required("First Name is required"),
       lastName: Yup.string().max(255).required("Last Name is required"),
       password: Yup.string().max(255).required("Password is required"),
+      medicalLicenseNumber: Yup.string().optional().when('isDoctor', {
+        is: true,
+        then(schema) {
+          return schema.required('Must entermedicalLicenseNumber');
+        },
+      })
     }),
     onSubmit: async (values, helpers) => {
-
       try {
-        const { firstName, lastName, email, password } = values
-
-        const user = await AuthService.register(firstName, lastName, email, password)
+        const { firstName, lastName, email, password, medicalLicenseNumber } = values
+    
+        const user = await AuthService.register(firstName, lastName, email, password, medicalLicenseNumber)
         if (!user) {
           throw new Error('Failed to register. The data are incorrect. Password must be at least 8 characters!')
         }
         addUser(user)
         navigate("/dashboard");
-        
+
       } catch (err) {
         if (err instanceof Error) {
           toast.error(err.message);
@@ -61,6 +66,14 @@ const RegisterPage = () => {
       }
     },
   });
+
+  const handleMethodChange = useCallback(
+    (_event: any, value: any) => {
+      setMethod(value);
+      formik.setFieldValue('isDoctor', value === 'doctor')
+    },
+    []
+  );
 
   return (
     <>
@@ -98,8 +111,35 @@ const RegisterPage = () => {
                 </Link>
               </Typography>
             </Stack>
+            <Tabs
+              onChange={handleMethodChange}
+              sx={{ mb: 3 }}
+              value={method}
+            >
+              <Tab
+                label="User"
+                value="user"
+              />
+              <Tab
+                label="Doctor"
+                value="doctor"
+              />
+            </Tabs>
             <form noValidate onSubmit={formik.handleSubmit}>
               <Stack spacing={3}>
+                {method === 'doctor' && (
+                  <TextField
+                    error={!!(formik.touched.medicalLicenseNumber && formik.errors.medicalLicenseNumber)}
+                    fullWidth
+                    helperText={formik.touched.medicalLicenseNumber && formik.errors.medicalLicenseNumber}
+                    label="Medical License Number"
+                    name="medicalLicenseNumber"
+                    onBlur={formik.handleBlur}
+                    onChange={formik.handleChange}
+                    value={formik.values.medicalLicenseNumber}
+                  />
+                )}
+
                 <TextField
                   error={!!(formik.touched.firstName && formik.errors.firstName)}
                   fullWidth
