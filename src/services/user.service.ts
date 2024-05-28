@@ -24,7 +24,7 @@ export const getUsers = async () => {
   }
 };
 
-export const getDoctorAccountsWithSpecificStatus = async (status: string) => {
+export const getDoctorAccountsBasedOnStatus = async (status: string) => {
   try {
     const response = await api.get(`/users/doctors/${status}`);
     if (response.status !== 200) {
@@ -37,9 +37,9 @@ export const getDoctorAccountsWithSpecificStatus = async (status: string) => {
   }
 };
 
-export const getPatientWithSentRequest = async () => {
+export const getPatientBasedOnRequestedStatus = async (requestedStatus: string) => {
   try {
-    const response = await api.get("/users/patients/sent");
+    const response = await api.get(`/users/patients/${requestedStatus}`);
     if (response.status !== 200) {
       throw new Error(response.statusText);
     }
@@ -47,6 +47,19 @@ export const getPatientWithSentRequest = async () => {
   } catch (error: any) {
     console.error(error);
     return handleError("Failed to retrieve the list of patients in SENT request state!", error.code);
+  }
+};
+
+export const getPatientsByDoctorId = async (doctorId: string) => {
+  try {
+    const response = await api.get(`/users/patients/${doctorId}`);
+    if (response.status !== 200) {
+      throw new Error(response.statusText);
+    }
+    return response.data.patients
+  } catch (error: any) {
+    console.error(error);
+    return handleError("Failed to retrieve the list of patients by Doctor ID!", error.code);
   }
 };
 

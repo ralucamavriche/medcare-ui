@@ -1,0 +1,1 @@
+export * as DoctorRequestsPage from '../Admin/DoctorRequestsPage'

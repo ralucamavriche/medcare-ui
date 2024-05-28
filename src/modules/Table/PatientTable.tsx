@@ -1,61 +1,60 @@
 import { Avatar, Box, Button, Card, Stack, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
-import { userService } from "../../services";
+import { UserService } from "../../services";
 import { toast } from "react-toastify";
 
-interface DoctorsValidationTable {
+interface PatientTable {
     count: number,
     items: Array<object>,
-    onPageChange: Function,
-    onRowsPerPageChange: Function,
+    onPageChange: any,
+    onRowsPerPageChange: any,
     page: number,
     rowsPerPage: number
 };
 
 
-const onAcceptRequest = async (userId: string) => {
+const onAcceptRequest = async (patientId: string) => {
     try {
-        if (!userId) {
-            throw new Error('User ID not found!')
+        if (!patientId) {
+            throw new Error('Patient ID not found!')
         }
 
-        await userService.updateUser(userId, {
-            status: 'ACCEPTED'
+        await UserService.updateUser(patientId, {
+            requestedDoctorStatus: 'ACCEPTED'
         });
-        toast.success("User Request Successfully Accepted!");
+        toast.success("Patient Request Successfully Accepted!");
 
     } catch (error) {
-        console.error(`Failed to update the state of the user account request: ${(error as Error)?.message}`)
-        toast.error(`Failed to update the state of the user account request: ${(error as Error)?.message}`);
+        console.error(`Failed to update the status of the request: ${(error as Error)?.message}`)
+        toast.error(`Failed to update the status of the request: ${(error as Error)?.message}`);
     }
 
 };
 
-const onDeclineRequest = async (userId: string) => {
+const onDeclineRequest = async (patientId: string) => {
     try {
-        if (!userId) {
-            throw new Error('User ID not found!')
+        if (!patientId) {
+            throw new Error('Patient ID not found!')
         }
 
-        await userService.updateUser(userId, {
-            status: 'REJECTED'
+        await UserService.updateUser(patientId, {
+            requestedDoctorStatus: 'REJECTED'
         });
-        toast.success("User Request Successfully Rejected!");
+        toast.success("Patient Request Successfully Rejected!");
 
     } catch (error) {
-        console.error(`Failed to update the state of the user account request: ${(error as Error)?.message}`)
-        toast.error(`Failed to update the state of the user account request: ${(error as Error)?.message}`);
+        console.error(`Failed to update the status of the request: ${(error as Error)?.message}`)
+        toast.error(`Failed to update the status of the request: ${(error as Error)?.message}`);
     }
 
 };
-const DoctorsValidationTable = (props: any) => {
+const PatientTable = (props: PatientTable) => {
     const {
         count = 0,
         items = [],
         onPageChange = () => { },
         onRowsPerPageChange,
         page = 0,
-        rowsPerPage = 0,
-        isDoctorPage
+        rowsPerPage = 0
     } = props;
 
     return (
@@ -74,11 +73,9 @@ const DoctorsValidationTable = (props: any) => {
                                 <TableCell>
                                     Email
                                 </TableCell>
-
                                 <TableCell>
-                                    Medical License Number
+                                    Phone number
                                 </TableCell>
-
                                 <TableCell>
                                     Created At
                                 </TableCell>
@@ -101,7 +98,7 @@ const DoctorsValidationTable = (props: any) => {
                                                 direction="row"
                                                 spacing={2}
                                             >
-                                                <Avatar src="/assets/avatars/avatar-doctor.jpg">
+                                                <Avatar src="/assets/avatars/avatar-anika-visser.png">
                                                     {customer.firstName}
                                                 </Avatar>
                                                 <Typography variant="subtitle2">
@@ -115,12 +112,9 @@ const DoctorsValidationTable = (props: any) => {
                                         <TableCell>
                                             {customer.email}
                                         </TableCell>
-                                        {isDoctorPage === true && (
                                             <TableCell>
-                                                {customer.medicalLicenseNumber}
+                                                {customer.phone}
                                             </TableCell>
-                                        )}
-
                                         <TableCell>
                                             {customer.createdAt}
                                         </TableCell>
@@ -155,4 +149,4 @@ const DoctorsValidationTable = (props: any) => {
     )
 };
 
-export default DoctorsValidationTable;
+export default PatientTable;

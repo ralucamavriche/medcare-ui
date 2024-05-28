@@ -1,8 +1,5 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
-import { styled } from "@mui/material/styles";
 import Helmet from "react-helmet";
-import { ToastContainer } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
 
 import HomePage from "./pages/Home";
 import AppointmentPage from "./pages/Appointment";
@@ -11,8 +8,6 @@ import LoginPage from "./pages/Auth/LoginPage";
 import RegisterPage from "./pages/Auth/RegisterPage";
 import NotFoundPage from "./pages/NotFound";
 import AccountPage from "./pages/Account";
-import Navbar from "./components/Navbar";
-import Sidebar from "./components/Sidebar";
 import DashboardPage from "./pages/Dashboard";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -20,11 +15,13 @@ import { AuthContext } from "./context/AuthContext";
 import { useEffect, useState } from "react";
 import { AuthService } from "./services";
 import { IUser } from "./types/dto/user";
-import useAuthGuard from "./hooks/useAuthGuard";
 import Spinner from "./components/Spinner/Spinner";
-import DoctorValidationPage from "./pages/Doctors/DoctorsValidationPage";
-import DoctorAssignmentListPage from "./pages/Doctors/DoctorAssignmentListPage";
-import PatientRequestsForDoctorPage from "./pages/Patient/PatientRequestsForDoctorPage";
+import DoctorValidationPage from "./pages/Admin/DoctorRequestsPage";
+import AvailableDoctors from "./pages/Patient/DoctorsAssignmentPage";
+import PatientRequestsForDoctorPage from "./pages/Doctors/PatientRequestsPage";
+import MyPatientsPage from "./pages/Doctors/MyPatientsPage";
+import DashboardLayout from "./layouts/Dashboard/DashboardLayout";
+import Unauthorized from "./pages/Unauthorized";
 
 const Fonts = () => (
   <>
@@ -48,9 +45,11 @@ const Fonts = () => (
 const App = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState<IUser | null>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
 
   const setUserData = (user: IUser | null) => {
     setUser(user)
+    setIsAuthenticated(!!user?.id)
   }
 
   useEffect(() => {
@@ -76,7 +75,7 @@ const App = () => {
         <Fonts />
       </Helmet>
       <BrowserRouter>
-        <AuthContext.Provider value={{ user, setUser: setUserData }}>
+        <AuthContext.Provider value={{ user, setUser: setUserData, isAuthenticated, setIsAuthenticated }}>
           <Routes>
             <Route path="/" element={<HomeLayout />}>
               <Route index element={<HomePage />} />
@@ -86,14 +85,15 @@ const App = () => {
               <Route path="appointment" element={<AppointmentPage />} />
               <Route path="account" element={<AccountPage />} />
               <Route path="doctors-requests" element={<DoctorValidationPage />} />
-              <Route path="accepted-doctors" element={<DoctorAssignmentListPage />} />
+              <Route path="available-doctors" element={<AvailableDoctors />} />
               <Route path="patient-requests" element={<PatientRequestsForDoctorPage />} />
-
+              <Route path="my-patients" element={<MyPatientsPage />} />
             </Route>
             <Route path="/auth" element={<AuthLayout />}>
               <Route path="login" element={<LoginPage />} />
               <Route path="register" element={<RegisterPage />} />
             </Route>
+            <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </AuthContext.Provider>
@@ -102,40 +102,6 @@ const App = () => {
   );
 };
 
-const SIDE_NAV_WIDTH = 280;
-
-const LayoutRoot = styled("div")(({ theme }) => ({
-  display: "flex",
-  flex: "1 1 auto",
-  maxWidth: "100%",
-  [theme.breakpoints.up("lg")]: {
-    paddingLeft: SIDE_NAV_WIDTH,
-  },
-}));
-
-const LayoutContainer = styled("div")({
-  display: "flex",
-  flex: "1 1 auto",
-  flexDirection: "column",
-  width: "100%",
-});
-
-function DashboardLayout() {
-  useAuthGuard()
-
-  return (
-    <div>
-      <Navbar />
-      <Sidebar />
-      <LayoutRoot>
-        <LayoutContainer>
-          <Outlet />
-        </LayoutContainer>
-      </LayoutRoot>
-      <ToastContainer />
-    </div>
-  );
-}
 
 function HomeLayout() {
   return (

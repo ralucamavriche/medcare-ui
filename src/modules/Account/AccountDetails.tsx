@@ -47,6 +47,8 @@ const INITIAL_STATE: IUser = {
   address: "",
   city: "",
   country: "",
+  medicalLicenseNumber: ""
+
 }
 
 interface IAccountDetails {
@@ -115,6 +117,18 @@ export const AccountDetails = (props: IAccountDetails) => {
                   value={values.lastName}
                 />
               </Grid>
+              {
+                userDetails?.role === 'doctor' ? (
+                  <Grid xs={12} md={6}>
+                    <TextField
+                      fullWidth
+                      label="Medical License Number"
+                      name="medicalLicenseNumber"
+                      onChange={handleChange}
+                      value={values.medicalLicenseNumber} />
+                  </Grid>
+                ) : ('')
+              }
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
@@ -158,7 +172,7 @@ export const AccountDetails = (props: IAccountDetails) => {
                   </Select>
                 </FormControl>
               </Grid>
-              
+
               <Grid xs={12} md={6}>
                 <TextField
                   fullWidth

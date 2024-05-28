@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Category } from "@mui/icons-material";
 import {
   Box,
@@ -14,9 +14,11 @@ import {
 } from "@mui/material";
 
 import Logo from "../Logo";
-import items from "../../layouts/Dashboard/config";
 import Scrollbar from "../Scrollbar";
 import SidebarItem from "../SidebarItem";
+import { dashboardItems } from "../../layouts/Dashboard/config";
+import useAuth from "../../hooks/useAuth";
+import { ROLES, getPermission } from "../../permissions";
 
 interface SidebarProps {
   open?: boolean;
@@ -25,7 +27,11 @@ interface SidebarProps {
 
 const Sidebar = (props: SidebarProps) => {
   const { open, onClose } = props;
-  const pathname = window.location.pathname;
+  const location = useLocation();
+  const { user } = useAuth()
+
+  const pathname = location.pathname;
+
   const lgUp = useMediaQuery<Theme>((theme: Theme) =>
     theme.breakpoints.up("lg")
   );
@@ -101,8 +107,13 @@ const Sidebar = (props: SidebarProps) => {
               m: 0,
             }}
           >
-            {items.map((item) => {
+            {dashboardItems.map((item) => {
               const active = item.path ? pathname === item.path : false;
+              const hasRole = getPermission(user?.role as ROLES, item.resource)
+
+              if (!hasRole) {
+                return null
+              }
 
               return (
                 <SidebarItem

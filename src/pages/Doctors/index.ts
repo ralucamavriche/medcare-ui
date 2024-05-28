@@ -1,1 +1,2 @@
-export { default } from './DoctorsValidationPage'
+export * as PatientRequestsPage from './PatientRequestsPage'
+export * as MyPatientsPage from './MyPatientsPage'

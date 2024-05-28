@@ -2,40 +2,40 @@ import { Box, Container, Stack, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { applyPagination } from '../../utils/pagination';
-import { userService } from '../../services';
+import { UserService } from '../../services';
 import { toast } from 'react-toastify';
-import DoctorsValidationTable from '../../modules/Doctor/DoctorsValidationTable';
+import PatientTable from '../../modules/Table/PatientTable';
 
 
-const DoctorValidationPage = () => {
+const PatientRequestsPage = () => {
 
   const useCustomers = (page: number, rowsPerPage: any) => {
     return useMemo(
       () => {
-        return applyPagination(doctors, page, rowsPerPage);
+        return applyPagination(patients, page, rowsPerPage);
       },
-      [page, rowsPerPage, doctors]
+      [page, rowsPerPage, patients]
     );
   };
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [doctors, setDoctors] = useState([]);
+  const [patients, setPatients] = useState([]);
   const customers = useCustomers(page, rowsPerPage);
 
   useEffect(() => {
-    const fetchDoctors = async () => {
+    const fetchPatients = async () => {
       try {
-        const status = 'PENDING';
-        const doctors = await userService.getDoctorAccountsWithSpecificStatus(status);
-        setDoctors(doctors);
+        const requestedStatus = 'SENT';
+        const patients = await UserService.getPatientBasedOnRequestedStatus(requestedStatus);
+        setPatients(patients);
       } catch (error) {
-        console.error(`Failed to userService.getDoctorAccountsWithSpecificStatus: ${(error as Error)?.message}`);
+        console.error(`Failed to UserService.getPatientBasedOnRequestedStatus: ${(error as Error)?.message}`);
         toast.error(`Something went wrong:  ${(error as Error)?.message}`);
       }
     };
 
-    fetchDoctors();
+    fetchPatients();
   }, []);
 
   const handlePageChange = useCallback(
@@ -55,7 +55,7 @@ const DoctorValidationPage = () => {
   return (
     <>
       <Helmet>
-        <title>Doctor Requests</title>
+        <title>Patient Requests</title>
       </Helmet>
       <Box
         component="main"
@@ -73,13 +73,13 @@ const DoctorValidationPage = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                 Doctor requests
+                 Patient requests
                 </Typography>
 
               </Stack>
             </Stack>
-            <DoctorsValidationTable
-              count={doctors.length}
+            <PatientTable
+              count={patients.length}
               items={customers}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
@@ -91,4 +91,4 @@ const DoctorValidationPage = () => {
     </>
   );
 };
-export default DoctorValidationPage;
+export default PatientRequestsPage;

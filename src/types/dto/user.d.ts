@@ -6,8 +6,9 @@ export interface IUser {
     address?: string,
     city?: string,
     country?: string,
-    role?: string,
+    role: string,
     id?: string,
     requestedDoctorStatus?: 'NOT_SENT' | 'SENT',
     doctorId?:string
+    medicalLicenseNumber?: string
 }

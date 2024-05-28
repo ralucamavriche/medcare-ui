@@ -4,20 +4,20 @@ import { IUser } from "../types/dto/user";
 import { AuthService } from "../services";
 
 const useAuth = () => {
-    const { user, setUser } = useContext(AuthContext);
+    const { user, isAuthenticated, setIsAuthenticated, setUser } = useContext(AuthContext);
 
     const addUser = (user: IUser) => {
         setUser(user);
+        setIsAuthenticated(true)
     };
 
     const removeUser = () => {
         AuthService.logout()
         setUser(null);
+        setIsAuthenticated(false)
     };
 
-    
-
-    return { user, addUser, removeUser };
+    return { user, isAuthenticated, addUser, removeUser };
 };
 
 export default useAuth

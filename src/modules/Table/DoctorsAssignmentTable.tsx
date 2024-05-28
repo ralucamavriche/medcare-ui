@@ -1,8 +1,10 @@
 import { Avatar, Box, Button, Card, Stack, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
-import { userService } from "../../services";
+import { UserService } from "../../services";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import useAuth from "../../hooks/useAuth";
 
-interface PatientTable {
+interface IDoctorsAssignmentTable {
     count: number,
     items: Array<object>,
     onPageChange: any,
@@ -11,51 +13,47 @@ interface PatientTable {
     rowsPerPage: number
 };
 
-
-const onAcceptRequest = async (patientId: string) => {
-    try {
-        if (!patientId) {
-            throw new Error('Patient ID not found!')
-        }
-
-        await userService.updateUser(patientId, {
-            requestedDoctorStatus: 'ACCEPTED'
-        });
-        toast.success("Patient Request Successfully Accepted!");
-
-    } catch (error) {
-        console.error(`Failed to update the status of the request: ${(error as Error)?.message}`)
-        toast.error(`Failed to update the status of the request: ${(error as Error)?.message}`);
-    }
-
-};
-
-const onDeclineRequest = async (patientId: string) => {
-    try {
-        if (!patientId) {
-            throw new Error('Patient ID not found!')
-        }
-
-        await userService.updateUser(patientId, {
-            requestedDoctorStatus: 'REJECTED'
-        });
-        toast.success("Patient Request Successfully Rejected!");
-
-    } catch (error) {
-        console.error(`Failed to update the status of the request: ${(error as Error)?.message}`)
-        toast.error(`Failed to update the status of the request: ${(error as Error)?.message}`);
-    }
-
-};
-const PatientTable = (props: PatientTable) => {
+const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
     const {
         count = 0,
         items = [],
         onPageChange = () => { },
         onRowsPerPageChange,
         page = 0,
-        rowsPerPage = 0
+        rowsPerPage = 0,
     } = props;
+
+    const [isDisable, setIsDisabled] = useState(false);
+    const { user, addUser } = useAuth();
+
+    const { id: userId, requestedDoctorStatus, doctorId } = user || {}
+
+    if (!userId) {
+        throw new Error('User is not defined')
+    }
+
+    const handleOnRequest = async (doctorId: string) => {
+        try {
+            if (!userId || !doctorId) {
+                throw new Error('User or doctor IDs not found!')
+            }
+            const userData = await UserService.updateUser(userId, {
+                requestedDoctorStatus: 'SENT',
+                doctorId
+
+            });
+
+            addUser(userData);
+            toast.success("Request successfully sent!");
+            setIsDisabled(true);
+
+        } catch (error) {
+            console.error(`Failed to sent the request to the doctor: ${(error as Error)?.message}`)
+            toast.error(`Failed to sent the request to the doctor: ${(error as Error)?.message}`);
+        }
+
+    }
+    const isSent = requestedDoctorStatus === 'SENT';
 
     return (
         <>
@@ -71,16 +69,16 @@ const PatientTable = (props: PatientTable) => {
                                     Last Name
                                 </TableCell>
                                 <TableCell>
+                                    Medical License Number
+                                </TableCell>
+                                <TableCell>
                                     Email
                                 </TableCell>
                                 <TableCell>
                                     Phone number
                                 </TableCell>
                                 <TableCell>
-                                    Created At
-                                </TableCell>
-                                <TableCell>
-                                    Status
+                                    Request
                                 </TableCell>
                             </TableRow>
                         </TableHead>
@@ -110,22 +108,25 @@ const PatientTable = (props: PatientTable) => {
                                             {customer.lastName}
                                         </TableCell>
                                         <TableCell>
+                                            {customer.medicalLicenseNumber}
+                                        </TableCell>
+                                        <TableCell>
                                             {customer.email}
                                         </TableCell>
-                                            <TableCell>
-                                                {customer.phone}
-                                            </TableCell>
                                         <TableCell>
-                                            {customer.createdAt}
+                                            {customer.phone}
                                         </TableCell>
                                         <TableCell>
                                             <Stack direction="row" spacing={2}>
-                                                <Button variant="contained" sx={{ background: 'green' }} onClick={() => onAcceptRequest(customer.id)}>
-                                                    Accept
-                                                </Button>
-                                                <Button variant="contained" sx={{ background: 'red' }} onClick={() => onDeclineRequest(customer.id)}>
-                                                    Decline
-                                                </Button>
+                                                {
+                                                    customer.id === doctorId ? (
+                                                        'Requested'
+                                                    ) : (
+                                                        <Button variant="contained" onClick={() => handleOnRequest(customer.id)} disabled={isDisable || isSent}>
+                                                            Send request
+                                                        </Button>
+                                                    )
+                                                }
                                             </Stack>
 
                                         </TableCell>
@@ -149,4 +150,4 @@ const PatientTable = (props: PatientTable) => {
     )
 };
 
-export default PatientTable;
+export default DoctorsAssignmentTable;

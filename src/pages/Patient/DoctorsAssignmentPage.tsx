@@ -2,11 +2,11 @@ import { Box, Container, Stack, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { applyPagination } from '../../utils/pagination';
-import { userService } from '../../services';
+import { UserService } from '../../services';
 import { toast } from 'react-toastify';
-import DoctorsAssignmentTable from '../../modules/Doctor/DoctorsAssignmentTable';
+import DoctorsAssignmentTable from '../../modules/Table/DoctorsAssignmentTable';
 
-const DoctorAssignmentListPage = () => {
+const DoctorsAssignmentPage = () => {
 
     const useCustomers = (page: number, rowsPerPage: any) => {
         return useMemo(
@@ -26,10 +26,10 @@ const DoctorAssignmentListPage = () => {
         const fetchDoctors = async () => {
             try {
                 const status = 'ACCEPTED';
-                const doctors = await userService.getDoctorAccountsWithSpecificStatus(status);
+                const doctors = await UserService.getDoctorAccountsBasedOnStatus(status);
                 setDoctors(doctors);
             } catch (error) {
-                console.error(`Failed to userService.getDoctorAccountsWithSpecificStatus: ${(error as Error)?.message}`);
+                console.error(`Failed to UserService.getDoctorAccountsBasedOnStatus: ${(error as Error)?.message}`);
                 toast.error(`Something went wrong:  ${(error as Error)?.message}`);
             }
         };
@@ -54,7 +54,7 @@ const DoctorAssignmentListPage = () => {
     return (
         <>
             <Helmet>
-                <title>Doctor Accepted</title>
+                <title>Available Doctors</title>
             </Helmet>
             <Box
                 component="main"
@@ -72,7 +72,7 @@ const DoctorAssignmentListPage = () => {
                         >
                             <Stack spacing={1}>
                                 <Typography variant="h4">
-                                    Available Doctors
+                                    Available doctors list
                                 </Typography>
 
                             </Stack>
@@ -90,5 +90,5 @@ const DoctorAssignmentListPage = () => {
         </>
     );
 };
-export default DoctorAssignmentListPage;
+export default DoctorsAssignmentPage;
 

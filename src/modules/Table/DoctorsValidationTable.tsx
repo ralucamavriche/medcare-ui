@@ -1,59 +1,61 @@
 import { Avatar, Box, Button, Card, Stack, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
-import { userService } from "../../services";
+import { UserService } from "../../services";
 import { toast } from "react-toastify";
-import { useState } from "react";
-import useAuth from "../../hooks/useAuth";
 
-interface IDoctorsAssignmentTable {
+interface DoctorsValidationTable {
     count: number,
     items: Array<object>,
-    onPageChange: any,
-    onRowsPerPageChange: any,
+    onPageChange: Function,
+    onRowsPerPageChange: Function,
     page: number,
     rowsPerPage: number
 };
 
-const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
+
+const onAcceptRequest = async (userId: string) => {
+    try {
+        if (!userId) {
+            throw new Error('Doctor ID not found!')
+        }
+
+        await UserService.updateUser(userId, {
+            status: 'ACCEPTED'
+        });
+        toast.success("Doctor request successfully accepted!");
+
+    } catch (error) {
+        console.error(`Failed to accept the request: ${(error as Error)?.message}`)
+        toast.error(`Failed to accept the request: ${(error as Error)?.message}`);
+    }
+
+};
+
+const onDeclineRequest = async (userId: string) => {
+    try {
+        if (!userId) {
+            throw new Error('Doctor ID not found!')
+        }
+
+        await UserService.updateUser(userId, {
+            status: 'REJECTED'
+        });
+        toast.success("Doctor request successfully rejected!");
+
+    } catch (error) {
+        console.error(`Failed to reject the request: ${(error as Error)?.message}`)
+        toast.error(`Failed to reject the request: ${(error as Error)?.message}`);
+    }
+
+};
+const DoctorsValidationTable = (props: any) => {
     const {
         count = 0,
         items = [],
         onPageChange = () => { },
         onRowsPerPageChange,
         page = 0,
-        rowsPerPage = 0,
+        rowsPerPage = 0
     } = props;
-
-    const [isDisable, setIsDisabled] = useState(false);
-    const { user, addUser } = useAuth();
-
-    const { id: userId, requestedDoctorStatus, doctorId } = user || {}
-
-    if (!userId) {
-        throw new Error('User is not defined')
-    }
-
-    const handleOnRequest = async (doctorId: string) => {
-        try {
-            if (!userId || !doctorId) {
-                throw new Error('User or doctor IDs not found!')
-            }
-            const userData = await userService.updateUser(userId, {
-                requestedDoctorStatus: 'SENT',
-                doctorId
-
-            });
-
-            addUser(userData);
-            toast.success("Request Successfully Sent!");
-            setIsDisabled(true);
-
-        } catch (error) {
-            console.error(`Failed to sent the request to the doctor: ${(error as Error)?.message}`)
-            toast.error(`Failed to sent the request to the doctor: ${(error as Error)?.message}`);
-        }
-
-    }
-    const isSent = requestedDoctorStatus === 'SENT';
 
     return (
         <>
@@ -69,19 +71,16 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
                                     Last Name
                                 </TableCell>
                                 <TableCell>
-                                    Description
+                                    Medical License Number
                                 </TableCell>
                                 <TableCell>
                                     Email
                                 </TableCell>
                                 <TableCell>
-                                    Medical License Number
+                                    Created At
                                 </TableCell>
                                 <TableCell>
-                                    Phone number
-                                </TableCell>
-                                <TableCell>
-                                    Request
+                                    Status
                                 </TableCell>
                             </TableRow>
                         </TableHead>
@@ -99,7 +98,7 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
                                                 direction="row"
                                                 spacing={2}
                                             >
-                                                <Avatar src="/assets/avatars/avatar-anika-visser.png">
+                                                <Avatar src="/assets/avatars/avatar-doctor.jpg">
                                                     {customer.firstName}
                                                 </Avatar>
                                                 <Typography variant="subtitle2">
@@ -111,30 +110,22 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
                                             {customer.lastName}
                                         </TableCell>
                                         <TableCell>
-                                            {customer.description || 'Ala bala portocala'}
+                                            {customer.medicalLicenseNumber}
                                         </TableCell>
                                         <TableCell>
                                             {customer.email}
                                         </TableCell>
-
                                         <TableCell>
-                                            {customer.medicalLicenseNumber}
-                                        </TableCell>
-                                        <TableCell>
-                                            {customer.phone}
+                                            {customer.createdAt}
                                         </TableCell>
                                         <TableCell>
                                             <Stack direction="row" spacing={2}>
-                                                {
-                                                    customer.id === doctorId ? (
-                                                        'Requested'
-                                                    ) : (
-                                                        <Button variant="contained" onClick={() => handleOnRequest(customer.id)} disabled={isDisable || isSent}>
-                                                            Send request
-                                                        </Button>
-                                                    )
-                                                }
-
+                                                <Button variant="contained" sx={{ background: 'green' }} onClick={() => onAcceptRequest(customer.id)}>
+                                                    Accept
+                                                </Button>
+                                                <Button variant="contained" sx={{ background: 'red' }} onClick={() => onDeclineRequest(customer.id)}>
+                                                    Decline
+                                                </Button>
                                             </Stack>
 
                                         </TableCell>
@@ -158,4 +149,4 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
     )
 };
 
-export default DoctorsAssignmentTable;
+export default DoctorsValidationTable;

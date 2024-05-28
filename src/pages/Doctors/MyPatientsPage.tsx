@@ -2,12 +2,13 @@ import { Box, Container, Stack, Typography } from '@mui/material';
 import { Helmet } from 'react-helmet';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { applyPagination } from '../../utils/pagination';
-import { userService } from '../../services';
+import { UserService } from '../../services';
 import { toast } from 'react-toastify';
-import PatientTable from '../../modules/Patient/PatientTable';
+import useAuth from '../../hooks/useAuth';
+import PatientTable from '../../modules/Table/PatientTable';
 
 
-const PatientRequestsForDoctorPage = () => {
+const MyPatientsPage = () => {
 
   const useCustomers = (page: number, rowsPerPage: any) => {
     return useMemo(
@@ -22,19 +23,26 @@ const PatientRequestsForDoctorPage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [patients, setPatients] = useState([]);
   const customers = useCustomers(page, rowsPerPage);
+  const { user } = useAuth();
+
+    const { id: userId } = user || {}
+
+    if (!userId) {
+        throw new Error('User is not defined')
+    }
 
   useEffect(() => {
-    const fetchPatients = async () => {
+    const fetchPatientsList = async (doctorId: string) => {
       try {
-        const patients = await userService.getPatientWithSentRequest();
+        const patients = await UserService.getPatientsByDoctorId(doctorId);
         setPatients(patients);
       } catch (error) {
-        console.error(`Failed to userService.getPatientWithSentRequest: ${(error as Error)?.message}`);
+        console.error(`Failed to UserService.getPatientsByDoctorId: ${(error as Error)?.message}`);
         toast.error(`Something went wrong:  ${(error as Error)?.message}`);
       }
     };
 
-    fetchPatients();
+    fetchPatientsList(userId);
   }, []);
 
   const handlePageChange = useCallback(
@@ -54,7 +62,7 @@ const PatientRequestsForDoctorPage = () => {
   return (
     <>
       <Helmet>
-        <title>Patient Requests</title>
+        <title>My Patients</title>
       </Helmet>
       <Box
         component="main"
@@ -72,7 +80,7 @@ const PatientRequestsForDoctorPage = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                 Patient requests
+                 Doctor requests
                 </Typography>
 
               </Stack>
@@ -90,4 +98,4 @@ const PatientRequestsForDoctorPage = () => {
     </>
   );
 };
-export default PatientRequestsForDoctorPage;
+export default MyPatientsPage;
