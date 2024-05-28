@@ -1,6 +1,4 @@
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
-import Helmet from "react-helmet";
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/Home";
 import AppointmentPage from "./pages/Appointment";
 import AuthLayout from "./layouts/Auth/AuthLayout";
@@ -9,8 +7,6 @@ import RegisterPage from "./pages/Auth/RegisterPage";
 import NotFoundPage from "./pages/NotFound";
 import AccountPage from "./pages/Account";
 import DashboardPage from "./pages/Dashboard";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 import { AuthContext } from "./context/AuthContext";
 import { useEffect, useState } from "react";
 import { AuthService } from "./services";
@@ -22,60 +18,46 @@ import PatientRequestsForDoctorPage from "./pages/Doctors/PatientRequestsPage";
 import MyPatientsPage from "./pages/Doctors/MyPatientsPage";
 import DashboardLayout from "./layouts/Dashboard/DashboardLayout";
 import Unauthorized from "./pages/Unauthorized";
-
-const Fonts = () => (
-  <>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400&display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&display=swap"
-    />
-  </>
-);
+import HomeLayout from "./layouts/HomeLayout/HomeLayout";
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true)
-  const [user, setUser] = useState<IUser | null>(null)
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const setUserData = (user: IUser | null) => {
-    setUser(user)
-    setIsAuthenticated(!!user?.id)
-  }
+    setUser(user);
+    setIsAuthenticated(!!user?.id);
+  };
 
   useEffect(() => {
     (async () => {
-      const { error, user } = await AuthService.getUserDetails()
+      const { error, user } = await AuthService.getUserDetails();
 
       if (error) {
-        console.error(error)
+        console.error(error);
       } else if (user) {
-        setUserData(user)
+        setUserData(user);
       }
-      setIsLoading(false)
-    })()
-  }, [])
+      setIsLoading(false);
+    })();
+  }, []);
 
   if (isLoading) {
-    return <Spinner />
+    return <Spinner />;
   }
 
   return (
     <>
-      <Helmet>
-        <Fonts />
-      </Helmet>
       <BrowserRouter>
-        <AuthContext.Provider value={{ user, setUser: setUserData, isAuthenticated, setIsAuthenticated }}>
+        <AuthContext.Provider
+          value={{
+            user,
+            setUser: setUserData,
+            isAuthenticated,
+            setIsAuthenticated,
+          }}
+        >
           <Routes>
             <Route path="/" element={<HomeLayout />}>
               <Route index element={<HomePage />} />
@@ -84,9 +66,15 @@ const App = () => {
               <Route index element={<DashboardPage />} />
               <Route path="appointment" element={<AppointmentPage />} />
               <Route path="account" element={<AccountPage />} />
-              <Route path="doctors-requests" element={<DoctorValidationPage />} />
+              <Route
+                path="doctors-requests"
+                element={<DoctorValidationPage />}
+              />
               <Route path="available-doctors" element={<AvailableDoctors />} />
-              <Route path="patient-requests" element={<PatientRequestsForDoctorPage />} />
+              <Route
+                path="patient-requests"
+                element={<PatientRequestsForDoctorPage />}
+              />
               <Route path="my-patients" element={<MyPatientsPage />} />
             </Route>
             <Route path="/auth" element={<AuthLayout />}>
@@ -101,16 +89,5 @@ const App = () => {
     </>
   );
 };
-
-
-function HomeLayout() {
-  return (
-    <div>
-      <Header />
-      <Outlet />
-      <Footer />
-    </div>
-  );
-}
 
 export default App;

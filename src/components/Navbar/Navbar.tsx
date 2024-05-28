@@ -30,7 +30,7 @@ interface NavbarProps {
 export const Navbar = (props: NavbarProps) => {
   const { onNavOpen } = props;
   const lgUp = useMediaQuery<Theme>((theme: Theme) => theme.breakpoints.up("lg"));
-  const {removeUser } = useAuth();
+  const { removeUser } = useAuth();
 
   return (
     <>
@@ -87,22 +87,22 @@ export const Navbar = (props: NavbarProps) => {
                 </Badge>
               </IconButton>
             </Tooltip>
-              <Tooltip title="Logout">
-                <IconButton onClick={removeUser} href="/auth/login">
-                  <SvgIcon fontSize="small">
-                    <ExitToApp />
-                  </SvgIcon>
-                </IconButton>
-              </Tooltip>
+            <Tooltip title="Logout">
+              <IconButton onClick={removeUser} href="/auth/login">
+                <SvgIcon fontSize="small">
+                  <ExitToApp />
+                </SvgIcon>
+              </IconButton>
+            </Tooltip>
             <Link href="/dashboard/account">
-            <Avatar 
-              sx={{
-                cursor: "pointer",
-                height: 40,
-                width: 40,
-              }}
-              src="/assets/avatars/avatar-anika-visser.png"
-            />
+              <Avatar
+                sx={{
+                  cursor: "pointer",
+                  height: 40,
+                  width: 40,
+                }}
+                src="/assets/avatars/avatar-anika-visser.png"
+              />
             </Link>
           </Stack>
         </Stack>

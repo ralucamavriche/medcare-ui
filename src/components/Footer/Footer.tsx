@@ -7,7 +7,7 @@ function Copyright() {
       {"Copyright © "}
       <Link color="inherit" href="#">
         MedCare
-      </Link>{" "}
+      </Link>
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -33,7 +33,7 @@ const Footer = () => {
             color="text.secondary"
             component="p"
           >
-            Your Health, Your Schedule, Our Priority.{" "}
+            Your Health, Your Schedule, Our Priority.
           </Typography>
           <Copyright />
         </Container>
