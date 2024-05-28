@@ -42,8 +42,9 @@ const RegisterPage = () => {
     onSubmit: async (values, helpers) => {
       try {
         const { firstName, lastName, email, password, medicalLicenseNumber } = values
-    
-        const user = await AuthService.register(firstName, lastName, email, password, medicalLicenseNumber)
+        const role = medicalLicenseNumber ? 'doctor' : 'user';
+
+        const user = await AuthService.register(firstName, lastName, email, password, medicalLicenseNumber, role)
         if (!user) {
           throw new Error('Failed to register. The data are incorrect. Password must be at least 8 characters!')
         }

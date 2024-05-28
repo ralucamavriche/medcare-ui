@@ -24,6 +24,32 @@ export const getUsers = async () => {
   }
 };
 
+export const getDoctorAccountsWithSpecificStatus = async (status: string) => {
+  try {
+    const response = await api.get(`/users/doctors/${status}`);
+    if (response.status !== 200) {
+      throw new Error(response.statusText);
+    }
+    return response.data.doctors
+  } catch (error: any) {
+    console.error(error);
+    return handleError(`Failed to retrieve the list of doctors in ${status} status!`, error.code);
+  }
+};
+
+export const getPatientWithSentRequest = async () => {
+  try {
+    const response = await api.get("/users/patients/sent");
+    if (response.status !== 200) {
+      throw new Error(response.statusText);
+    }
+    return response.data.patients
+  } catch (error: any) {
+    console.error(error);
+    return handleError("Failed to retrieve the list of patients in SENT request state!", error.code);
+  }
+};
+
 export const getUserById = async (id: string) => {
   try {
     const response = await api.get(`/users/${id}`);
@@ -57,7 +83,7 @@ export const updateUser = async (id: string, payload: any) => {
     if (response.status !== 200) {
       throw new Error(response.statusText);
     }
-    return response.data.user;
+    return response.data;
   } catch (error: any) {
     console.log(error);
     return handleError("Failed to update the user!", error.code);

@@ -22,6 +22,9 @@ import { AuthService } from "./services";
 import { IUser } from "./types/dto/user";
 import useAuthGuard from "./hooks/useAuthGuard";
 import Spinner from "./components/Spinner/Spinner";
+import DoctorValidationPage from "./pages/Doctors/DoctorsValidationPage";
+import DoctorAssignmentListPage from "./pages/Doctors/DoctorAssignmentListPage";
+import PatientRequestsForDoctorPage from "./pages/Patient/PatientRequestsForDoctorPage";
 
 const Fonts = () => (
   <>
@@ -52,19 +55,19 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const { error, user} = await AuthService.getUserDetails()
+      const { error, user } = await AuthService.getUserDetails()
 
-      if(error) {
+      if (error) {
         console.error(error)
-      } else if(user) {
+      } else if (user) {
         setUserData(user)
       }
       setIsLoading(false)
     })()
   }, [])
 
-  if(isLoading) {
-    return <Spinner/>
+  if (isLoading) {
+    return <Spinner />
   }
 
   return (
@@ -82,6 +85,10 @@ const App = () => {
               <Route index element={<DashboardPage />} />
               <Route path="appointment" element={<AppointmentPage />} />
               <Route path="account" element={<AccountPage />} />
+              <Route path="doctors-requests" element={<DoctorValidationPage />} />
+              <Route path="accepted-doctors" element={<DoctorAssignmentListPage />} />
+              <Route path="patient-requests" element={<PatientRequestsForDoctorPage />} />
+
             </Route>
             <Route path="/auth" element={<AuthLayout />}>
               <Route path="login" element={<LoginPage />} />
@@ -125,7 +132,7 @@ function DashboardLayout() {
           <Outlet />
         </LayoutContainer>
       </LayoutRoot>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 }

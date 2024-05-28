@@ -57,9 +57,9 @@ export const login = async (email: string, password: string) => {
     }
 }
 
-export const register = async (firstName: string, lastName: string, email: string, password: string, medicalLicenseNumber: string) => {
+export const register = async (firstName: string, lastName: string, email: string, password: string, medicalLicenseNumber: string, role: string) => {
     try {
-        const response = await api.post('/auth/register', { firstName, lastName, email, password, medicalLicenseNumber })
+        const response = await api.post('/auth/register', { firstName, lastName, email, password, medicalLicenseNumber, role })
 
         if (response.status !== 201) {
             throw new Error('Failed to register')

@@ -34,7 +34,41 @@ const items = [
     ),
     disabled: false,
     external: false
+  },
+  {
+    title: "Doctors Request",
+    path: "/dashboard/doctors-requests",
+    icon: (
+      <SvgIcon fontSize="small">
+        <Person />
+      </SvgIcon>
+    ),
+    disabled: false,
+    external: false
+  },
+  {
+    title: "Doctor Accepted",
+    path: "/dashboard/accepted-doctors",
+    icon: (
+      <SvgIcon fontSize="small">
+        <Person />
+      </SvgIcon>
+    ),
+    disabled: false,
+    external: false
+  },
+  {
+    title: "Patient Requests",
+    path: "/dashboard/patient-requests",
+    icon: (
+      <SvgIcon fontSize="small">
+        <Person />
+      </SvgIcon>
+    ),
+    disabled: false,
+    external: false
   }
+
 ];
 
 export default items;
