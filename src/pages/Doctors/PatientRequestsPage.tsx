@@ -1,21 +1,16 @@
-import { Box, Container, Stack, Typography } from '@mui/material';
-import { Helmet } from 'react-helmet';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { applyPagination } from '../../utils/pagination';
-import { UserService } from '../../services';
-import { toast } from 'react-toastify';
-import PatientTable from '../../modules/Table/PatientTable';
-
+import { Box, Container, Stack, Typography } from "@mui/material";
+import { Helmet } from "react-helmet";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { applyPagination } from "../../utils/pagination";
+import { UserService } from "../../services";
+import { toast } from "react-toastify";
+import PatientTable from "../../modules/Table/PatientTable";
 
 const PatientRequestsPage = () => {
-
   const useCustomers = (page: number, rowsPerPage: any) => {
-    return useMemo(
-      () => {
-        return applyPagination(patients, page, rowsPerPage);
-      },
-      [page, rowsPerPage, patients]
-    );
+    return useMemo(() => {
+      return applyPagination(patients, page, rowsPerPage);
+    }, [page, rowsPerPage, patients]);
   };
 
   const [page, setPage] = useState(0);
@@ -26,11 +21,17 @@ const PatientRequestsPage = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const requestedStatus = 'SENT';
-        const patients = await UserService.getPatientBasedOnRequestedStatus(requestedStatus);
+        const requestedStatus = "SENT"; // TODO: Add it as constant
+        const patients = await UserService.getPatientBasedOnRequestedStatus(
+          requestedStatus
+        );
         setPatients(patients);
       } catch (error) {
-        console.error(`Failed to UserService.getPatientBasedOnRequestedStatus: ${(error as Error)?.message}`);
+        console.error(
+          `Failed to UserService.getPatientBasedOnRequestedStatus: ${
+            (error as Error)?.message
+          }`
+        );
         toast.error(`Something went wrong:  ${(error as Error)?.message}`);
       }
     };
@@ -38,19 +39,13 @@ const PatientRequestsPage = () => {
     fetchPatients();
   }, []);
 
-  const handlePageChange = useCallback(
-    (_event: any, value: any) => {
-      setPage(value);
-    },
-    []
-  );
+  const handlePageChange = useCallback((_event: any, value: any) => {
+    setPage(value);
+  }, []);
 
-  const handleRowsPerPageChange = useCallback(
-    (event: any) => {
-      setRowsPerPage(event.target.value);
-    },
-    []
-  );
+  const handleRowsPerPageChange = useCallback((event: any) => {
+    setRowsPerPage(event.target.value);
+  }, []);
 
   return (
     <>
@@ -61,21 +56,14 @@ const PatientRequestsPage = () => {
         component="main"
         sx={{
           flexGrow: 1,
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth="xl">
           <Stack spacing={3}>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              spacing={4}
-            >
+            <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">
-                 Patient requests
-                </Typography>
-
+                <Typography variant="h4">Patient requests</Typography>
               </Stack>
             </Stack>
             <PatientTable
@@ -84,7 +72,8 @@ const PatientRequestsPage = () => {
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
-              rowsPerPage={rowsPerPage} />
+              rowsPerPage={rowsPerPage}
+            />
           </Stack>
         </Container>
       </Box>

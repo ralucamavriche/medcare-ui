@@ -34,11 +34,10 @@ const App = () => {
     (async () => {
       const { error, user } = await AuthService.getUserDetails();
 
-      if (error) {
-        console.error(error);
-      } else if (user) {
+      if (!error) {
         setUserData(user);
       }
+      
       setIsLoading(false);
     })();
   }, []);

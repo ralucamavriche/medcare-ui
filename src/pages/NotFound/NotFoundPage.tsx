@@ -32,7 +32,7 @@ const NotFoundPage = () => (
             }
           }}
         >
-          <img src="/assets/errors/error-404.svg" />
+          <img src="/assets/errors/error-404.svg" alt="error" />
         </Box>
         <Typography
           align="center"

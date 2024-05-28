@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
 import {
   Box,
@@ -16,11 +16,11 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { DateInput, EventInput } from "@fullcalendar/core";
 import { Delete } from "@mui/icons-material";
-import { OperationEvent } from "../../constants";
 import { EventImpl } from "@fullcalendar/core/internal";
 import { toast } from "react-toastify";
 import { DateTimeValidationError } from "@mui/x-date-pickers";
 import { isValidDuration } from "../../utils/date";
+import { OperationEvent } from "../../constants/common.constants";
 
 interface EventModalProps {
   event: EventInput;
@@ -93,9 +93,7 @@ const EventModal = ({
   })
 
   useEffect(() => {
-
     if(event) {
-      console.log('useEffect2', event.start)
       formik.setValues({
         ...formik.values,
         title: event.title!,

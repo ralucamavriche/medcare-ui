@@ -5,6 +5,7 @@ import { RESOURCES } from "../../permissions";
 export const BASE_PATH = '/dashboard'
 export const UNAUTHORIZED_PAGE = '/unauthorized'
 export const NOT_FOUND_PAGE = '/not-found'
+export const LOGIN_PAGE = '/auth/login'
 
 export const enabledRoutes = [
   BASE_PATH,

@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import useAuth from "../../hooks/useAuth";
 import { useEffect } from "react";
 import { RESOURCES, ROLES, getPermission } from "../../permissions";
-import { BASE_PATH, NOT_FOUND_PAGE, UNAUTHORIZED_PAGE, enabledRoutes, pagesWithPermissions } from "./config";
+import { BASE_PATH, LOGIN_PAGE, NOT_FOUND_PAGE, UNAUTHORIZED_PAGE, enabledRoutes, pagesWithPermissions } from "./config";
 
 const SIDE_NAV_WIDTH = 280;
 
@@ -38,8 +38,12 @@ const DashboardLayout = () => {
         const pathname = location.pathname as string;
         const isPageWithPermission = pagesWithPermissions.includes(pathname);
 
-        if(!isAuthenticated || !isPageWithPermission) {
-            return;
+        if(!isAuthenticated) {
+            return navigate(LOGIN_PAGE)
+        }
+
+        if(!isPageWithPermission) {
+            return
         }
 
         const role = user?.role as ROLES
@@ -49,7 +53,7 @@ const DashboardLayout = () => {
         if(!hasPermission) {
             navigate(UNAUTHORIZED_PAGE)
         }
-    }, [location.pathname, navigate, isAuthenticated])
+    }, [location.pathname, navigate, isAuthenticated, user])
 
     useEffect(() => {
         if (isAuthenticated && !enabledRoutes.includes(location.pathname)) {

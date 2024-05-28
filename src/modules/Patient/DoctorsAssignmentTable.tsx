@@ -26,18 +26,13 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
     const [isDisable, setIsDisabled] = useState(false);
     const { user, addUser } = useAuth();
 
-    const { id: userId, requestedDoctorStatus, doctorId } = user || {}
-
-    if (!userId) {
-        throw new Error('User is not defined')
-    }
-
     const handleOnRequest = async (doctorId: string) => {
         try {
-            if (!userId || !doctorId) {
-                throw new Error('User or doctor IDs not found!')
+            if(!user?.id || !doctorId) {
+                return;
             }
-            const userData = await UserService.updateUser(userId, {
+           
+            const userData = await UserService.updateUser(user?.id, {
                 requestedDoctorStatus: 'SENT',
                 doctorId
 
@@ -53,7 +48,7 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
         }
 
     }
-    const isSent = requestedDoctorStatus === 'SENT';
+    const isSent = user?.requestedDoctorStatus === 'SENT';
 
     return (
         <>
@@ -84,7 +79,6 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
                         </TableHead>
                         <TableBody>
                             {items.map((customer: any) => {
-
                                 return (
                                     <TableRow
                                         hover
@@ -119,7 +113,7 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
                                         <TableCell>
                                             <Stack direction="row" spacing={2}>
                                                 {
-                                                    customer.id === doctorId ? (
+                                                    customer.id === user?.doctorId ? (
                                                         'Requested'
                                                     ) : (
                                                         <Button variant="contained" onClick={() => handleOnRequest(customer.id)} disabled={isDisable || isSent}>

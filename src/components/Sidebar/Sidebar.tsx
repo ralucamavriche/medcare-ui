@@ -28,7 +28,7 @@ interface SidebarProps {
 const Sidebar = (props: SidebarProps) => {
   const { open, onClose } = props;
   const location = useLocation();
-  const { user } = useAuth()
+  const { user } = useAuth();
 
   const pathname = location.pathname;
 
@@ -109,10 +109,10 @@ const Sidebar = (props: SidebarProps) => {
           >
             {dashboardItems.map((item) => {
               const active = item.path ? pathname === item.path : false;
-              const hasRole = getPermission(user?.role as ROLES, item.resource)
+              const hasRole = getPermission(user?.role as ROLES, item.resource);
 
               if (!hasRole) {
-                return null
+                return null;
               }
 
               return (

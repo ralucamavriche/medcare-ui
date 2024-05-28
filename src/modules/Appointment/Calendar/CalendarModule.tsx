@@ -8,11 +8,11 @@ import { EventImpl } from "@fullcalendar/core/internal";
 
 import Calendar from "./Calendar";
 import EventModal from "../../../modals/EventModal";
-import { OperationEvent } from "../../../constants";
 import { AppointmentService } from "../../../services";
 import Spinner from "../../../components/Spinner/Spinner";
 import useAuth from "../../../hooks/useAuth";
 import { RequestAppointment } from "../../../types/dto/appointment";
+import { OperationEvent } from "../../../constants/common.constants";
 
 const STATUSES = {
   PENDING: 'PENDING',

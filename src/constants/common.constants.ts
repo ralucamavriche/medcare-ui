@@ -1,4 +1,4 @@
 export enum OperationEvent {
-    ADD,
-    EDIT
-  }
+  ADD,
+  EDIT,
+}
