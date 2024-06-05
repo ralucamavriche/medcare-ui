@@ -32,7 +32,7 @@ const Unauthorized = () => (
             }
           }}
         >
-          <img src="/assets/errors/error-404.svg" alt="error" />
+          <img src="/assets/errors/error-404.svg" alt="erorr" />
         </Box>
         <Typography
           align="center"

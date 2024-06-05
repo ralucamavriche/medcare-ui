@@ -14,7 +14,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { DateInput, EventInput } from "@fullcalendar/core";
+import { EventInput } from "@fullcalendar/core";
 import { Delete } from "@mui/icons-material";
 import { EventImpl } from "@fullcalendar/core/internal";
 import { toast } from "react-toastify";
@@ -102,6 +102,7 @@ const EventModal = ({
         end: moment(event.end)
       })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [event]);
 
   const style = {

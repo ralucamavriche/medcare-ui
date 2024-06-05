@@ -48,7 +48,6 @@ const INITIAL_STATE: IUser = {
   city: "",
   country: "",
   medicalLicenseNumber: ""
-
 }
 
 interface IAccountDetails {
@@ -71,6 +70,7 @@ export const AccountDetails = (props: IAccountDetails) => {
       ...values,
       ...userDetails
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetails])
 
   const handleChange = (event: any) => {

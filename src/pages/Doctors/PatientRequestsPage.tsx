@@ -10,6 +10,7 @@ const PatientRequestsPage = () => {
   const useCustomers = (page: number, rowsPerPage: any) => {
     return useMemo(() => {
       return applyPagination(patients, page, rowsPerPage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, rowsPerPage, patients]);
   };
 

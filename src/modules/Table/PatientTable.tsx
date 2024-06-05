@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Card, Stack, Table, TableBody, TableCell, TableHea
 import { UserService } from "../../services";
 import { toast } from "react-toastify";
 
-interface PatientTable {
+interface IPatientTable {
     count: number,
     items: Array<object>,
     onPageChange: any,
@@ -47,7 +47,7 @@ const onDeclineRequest = async (patientId: string) => {
     }
 
 };
-const PatientTable = (props: PatientTable) => {
+const PatientTable = (props: IPatientTable) => {
     const {
         count = 0,
         items = [],

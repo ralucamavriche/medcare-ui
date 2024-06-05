@@ -73,6 +73,7 @@ const RegisterPage = () => {
       setMethod(value);
       formik.setFieldValue('isDoctor', value === 'doctor')
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

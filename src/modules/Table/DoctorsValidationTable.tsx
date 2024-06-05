@@ -2,11 +2,11 @@ import { Avatar, Box, Button, Card, Stack, Table, TableBody, TableCell, TableHea
 import { UserService } from "../../services";
 import { toast } from "react-toastify";
 
-interface DoctorsValidationTable {
+interface IDoctorsValidationTable {
     count: number,
     items: Array<object>,
-    onPageChange: Function,
-    onRowsPerPageChange: Function,
+    onPageChange: any,
+    onRowsPerPageChange: any,
     page: number,
     rowsPerPage: number
 };
@@ -47,7 +47,7 @@ const onDeclineRequest = async (userId: string) => {
     }
 
 };
-const DoctorsValidationTable = (props: any) => {
+const DoctorsValidationTable = (props: IDoctorsValidationTable) => {
     const {
         count = 0,
         items = [],

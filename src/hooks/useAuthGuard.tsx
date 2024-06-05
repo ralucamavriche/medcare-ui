@@ -10,6 +10,7 @@ const useAuthGuard = () => {
         if (!user?.email) {
             navigate("/auth/login");
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.email]);
 };
 

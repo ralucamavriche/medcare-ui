@@ -14,6 +14,7 @@ const DoctorRequestsPage = () => {
       () => {
         return applyPagination(doctors, page, rowsPerPage);
       },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [page, rowsPerPage, doctors]
     );
   };

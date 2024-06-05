@@ -35,6 +35,7 @@ const MyPatientsPage = () => {
     };
 
     userId && fetchPatientsList(userId);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handlePageChange = useCallback((_event: any, value: any) => {
