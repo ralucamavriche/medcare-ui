@@ -5,6 +5,7 @@ import { applyPagination } from '../../utils/pagination';
 import { UserService } from '../../services';
 import { toast } from 'react-toastify';
 import DoctorsValidationTable from '../../modules/Table/DoctorsValidationTable';
+import { REQUEST_STATUSES } from '../../constants/common.constants';
 
 
 const DoctorRequestsPage = () => {
@@ -27,7 +28,7 @@ const DoctorRequestsPage = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const status = 'PENDING';
+        const status = REQUEST_STATUSES.PENDING;
         const doctors = await UserService.getDoctorAccountsBasedOnStatus(status);
         setDoctors(doctors);
       } catch (error) {

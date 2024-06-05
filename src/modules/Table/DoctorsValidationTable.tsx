@@ -1,6 +1,7 @@
 import { Avatar, Box, Button, Card, Stack, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, Typography } from "@mui/material";
 import { UserService } from "../../services";
 import { toast } from "react-toastify";
+import { REQUEST_STATUSES } from "../../constants/common.constants";
 
 interface IDoctorsValidationTable {
     count: number,
@@ -19,7 +20,7 @@ const onAcceptRequest = async (userId: string) => {
         }
 
         await UserService.updateUser(userId, {
-            status: 'ACCEPTED'
+            status: REQUEST_STATUSES.ACCEPTED
         });
         toast.success("Doctor request successfully accepted!");
 
@@ -37,7 +38,7 @@ const onDeclineRequest = async (userId: string) => {
         }
 
         await UserService.updateUser(userId, {
-            status: 'REJECTED'
+            status: REQUEST_STATUSES.REJECTED
         });
         toast.success("Doctor request successfully rejected!");
 

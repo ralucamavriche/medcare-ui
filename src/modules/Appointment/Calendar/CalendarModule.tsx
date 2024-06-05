@@ -12,26 +12,31 @@ import { AppointmentService } from "../../../services";
 import Spinner from "../../../components/Spinner/Spinner";
 import useAuth from "../../../hooks/useAuth";
 import { RequestAppointment } from "../../../types/dto/appointment";
-import { OperationEvent } from "../../../constants/common.constants";
+import { OperationEvent, REQUEST_STATUSES } from "../../../constants/common.constants";
 
-const STATUSES = {
-  PENDING: 'PENDING',
-  REJECTED: 'REJECTED',
-  ACCEPTED: 'ACCEPTED'
-}
 
 const BACKGROUND_COLOR_BASED_ON_STATUS = {
-  [STATUSES.PENDING]: {
+  [REQUEST_STATUSES.PENDING]: {
     backgroundColor: '#FFA500',
     borderColor: '#FFA500',
     textColor: 'white'
   },
-  [STATUSES.REJECTED]: {
+  [REQUEST_STATUSES.REJECTED]: {
     backgroundColor: 'red',
     borderColor: 'red',
     textColor: 'white'
   },
-  [STATUSES.ACCEPTED]: {
+  [REQUEST_STATUSES.ACCEPTED]: {
+    backgroundColor: 'green',
+    borderColor: 'green',
+    textColor: 'white'
+  },
+  [REQUEST_STATUSES.NOT_SENT]: {
+    backgroundColor: 'green',
+    borderColor: 'green',
+    textColor: 'white'
+  },
+  [REQUEST_STATUSES.SENT]: {
     backgroundColor: 'green',
     borderColor: 'green',
     textColor: 'white'
@@ -80,7 +85,7 @@ const CalendarModule = (_: ICalendarModule) => {
           end: endDate,
           description,
           status,
-          ...BACKGROUND_COLOR_BASED_ON_STATUS[status]
+          ...BACKGROUND_COLOR_BASED_ON_STATUS[status as REQUEST_STATUSES]
         }))
 
         setEvents(formattedAppointments)
@@ -102,7 +107,7 @@ const CalendarModule = (_: ICalendarModule) => {
       endDate: event.end,
       author: `${firstName} ${lastName}`,
       userId: userId,
-      status: 'PENDING'
+      status: REQUEST_STATUSES.PENDING
     };
 
     try {
@@ -129,7 +134,7 @@ const CalendarModule = (_: ICalendarModule) => {
         throw new Error('Id not defined')
       }
 
-      const status = 'PENDING'
+      const status = REQUEST_STATUSES.PENDING
       const payload: RequestAppointment = {
         title: eventInput.title || '',
         description: eventInput.description,

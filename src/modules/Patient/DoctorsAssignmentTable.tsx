@@ -3,6 +3,7 @@ import { UserService } from "../../services";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import { REQUEST_STATUSES } from "../../constants/common.constants";
 
 interface IDoctorsAssignmentTable {
     count: number,
@@ -33,7 +34,7 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
             }
            
             const userData = await UserService.updateUser(user?.id, {
-                requestedDoctorStatus: 'SENT',
+                requestedDoctorStatus: REQUEST_STATUSES.SENT,
                 doctorId
 
             });
@@ -48,7 +49,7 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
         }
 
     }
-    const isSent = user?.requestedDoctorStatus === 'SENT';
+    const isSent = user?.requestedDoctorStatus === REQUEST_STATUSES.SENT;
 
     return (
         <>

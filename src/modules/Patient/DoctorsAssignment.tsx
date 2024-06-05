@@ -3,6 +3,7 @@ import { applyPagination } from "../../utils/pagination";
 import { UserService } from "../../services";
 import { toast } from "react-toastify";
 import DoctorsAssignmentTable from "./DoctorsAssignmentTable";
+import { REQUEST_STATUSES } from "../../constants/common.constants";
 
 const DoctorsAssignment = () => {
   const [page, setPage] = useState(0);
@@ -12,7 +13,7 @@ const DoctorsAssignment = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const status = "ACCEPTED"; // TODO: Add as constant status
+        const status = REQUEST_STATUSES.ACCEPTED;
         const doctors = await UserService.getDoctorAccountsBasedOnStatus(
           status
         );

@@ -1,4 +1,13 @@
-import { Box, Button, Link, Stack, Tab, Tabs, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Link,
+  Stack,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
+} from "@mui/material";
 import * as ReactRouter from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -6,13 +15,14 @@ import { Helmet } from "react-helmet";
 import { AuthService } from "../../../services";
 import useAuth from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
-import { useCallback, useState } from 'react';
+import { toast } from "react-toastify";
+import { useCallback, useState } from "react";
+import { ROLES } from "../../../permissions";
 
 const RegisterPage = () => {
-  const { addUser } = useAuth()
+  const { addUser } = useAuth();
   const navigate = useNavigate();
-  const [method, setMethod] = useState('user');
+  const [method, setMethod] = useState("user");
 
   const formik = useFormik({
     initialValues: {
@@ -20,7 +30,7 @@ const RegisterPage = () => {
       firstName: "admin",
       lastName: "admin",
       password: "Password23.23",
-      medicalLicenseNumber: '',
+      medicalLicenseNumber: "",
       isDoctor: false,
       submit: null,
     },
@@ -32,32 +42,42 @@ const RegisterPage = () => {
       firstName: Yup.string().max(255).required("First Name is required"),
       lastName: Yup.string().max(255).required("Last Name is required"),
       password: Yup.string().max(255).required("Password is required"),
-      medicalLicenseNumber: Yup.string().optional().when('isDoctor', {
-        is: true,
-        then(schema) {
-          return schema.required('Must entermedicalLicenseNumber');
-        },
-      })
+      medicalLicenseNumber: Yup.string()
+        .optional()
+        .when("isDoctor", {
+          is: true,
+          then(schema) {
+            return schema.required("Must entermedicalLicenseNumber");
+          },
+        }),
     }),
     onSubmit: async (values, helpers) => {
       try {
-        const { firstName, lastName, email, password, medicalLicenseNumber } = values
-        const role = medicalLicenseNumber ? 'doctor' : 'user';
+        const { firstName, lastName, email, password, medicalLicenseNumber } =
+          values;
+        const role = medicalLicenseNumber ? ROLES.DOCTOR : ROLES.PATIENT;
 
-        const user = await AuthService.register(firstName, lastName, email, password, medicalLicenseNumber, role)
+        const user = await AuthService.register(
+          firstName,
+          lastName,
+          email,
+          password,
+          medicalLicenseNumber,
+          role
+        );
         if (!user) {
-          throw new Error('Failed to register. The data are incorrect. Password must be at least 8 characters!')
+          throw new Error(
+            "Failed to register. The data are incorrect. Password must be at least 8 characters!"
+          );
         }
-        addUser(user)
+        addUser(user);
         navigate("/dashboard");
-
       } catch (err) {
         if (err instanceof Error) {
           toast.error(err.message);
           helpers.setStatus({ success: false });
           helpers.setErrors({ submit: err.message });
           helpers.setSubmitting(false);
-
         } else {
           toast.error("An unknown error occurred.");
           helpers.setStatus({ success: false });
@@ -71,7 +91,7 @@ const RegisterPage = () => {
   const handleMethodChange = useCallback(
     (_event: any, value: any) => {
       setMethod(value);
-      formik.setFieldValue('isDoctor', value === 'doctor')
+      formik.setFieldValue("isDoctor", value === "doctor");
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -93,7 +113,7 @@ const RegisterPage = () => {
         <Box
           sx={{
             maxWidth: 550,
-            height: '600px',
+            height: "600px",
             px: 3,
             width: "100%",
           }}
@@ -113,27 +133,25 @@ const RegisterPage = () => {
                 </Link>
               </Typography>
             </Stack>
-            <Tabs
-              onChange={handleMethodChange}
-              sx={{ mb: 3 }}
-              value={method}
-            >
-              <Tab
-                label="User"
-                value="user"
-              />
-              <Tab
-                label="Doctor"
-                value="doctor"
-              />
+            <Tabs onChange={handleMethodChange} sx={{ mb: 3 }} value={method}>
+              <Tab label="User" value="user" />
+              <Tab label="Doctor" value="doctor" />
             </Tabs>
             <form noValidate onSubmit={formik.handleSubmit}>
               <Stack spacing={3}>
-                {method === 'doctor' && (
+                {method === "doctor" && (
                   <TextField
-                    error={!!(formik.touched.medicalLicenseNumber && formik.errors.medicalLicenseNumber)}
+                    error={
+                      !!(
+                        formik.touched.medicalLicenseNumber &&
+                        formik.errors.medicalLicenseNumber
+                      )
+                    }
                     fullWidth
-                    helperText={formik.touched.medicalLicenseNumber && formik.errors.medicalLicenseNumber}
+                    helperText={
+                      formik.touched.medicalLicenseNumber &&
+                      formik.errors.medicalLicenseNumber
+                    }
                     label="Medical License Number"
                     name="medicalLicenseNumber"
                     onBlur={formik.handleBlur}
@@ -143,9 +161,13 @@ const RegisterPage = () => {
                 )}
 
                 <TextField
-                  error={!!(formik.touched.firstName && formik.errors.firstName)}
+                  error={
+                    !!(formik.touched.firstName && formik.errors.firstName)
+                  }
                   fullWidth
-                  helperText={formik.touched.firstName && formik.errors.firstName}
+                  helperText={
+                    formik.touched.firstName && formik.errors.firstName
+                  }
                   label="First Name"
                   name="firstName"
                   onBlur={formik.handleBlur}
@@ -208,4 +230,3 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
-

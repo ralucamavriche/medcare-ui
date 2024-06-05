@@ -3,3 +3,8 @@ export interface Event {
   title: string;
   start: string;
 }
+
+export interface IError {
+  error: string;
+  code: number;
+}

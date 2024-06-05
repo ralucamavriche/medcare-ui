@@ -5,26 +5,27 @@ import { applyPagination } from "../../utils/pagination";
 import { UserService } from "../../services";
 import { toast } from "react-toastify";
 import PatientTable from "../../modules/Table/PatientTable";
+import { REQUEST_STATUSES } from "../../constants/common.constants";
+import { IUser } from "../../types/dto/user";
 
 const PatientRequestsPage = () => {
   const useCustomers = (page: number, rowsPerPage: any) => {
     return useMemo(() => {
       return applyPagination(patients, page, rowsPerPage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, rowsPerPage, patients]);
   };
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [patients, setPatients] = useState([]);
+  const [patients, setPatients] = useState<IUser[]>([]);
   const customers = useCustomers(page, rowsPerPage);
 
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const requestedStatus = "SENT"; // TODO: Add it as constant
         const patients = await UserService.getPatientBasedOnRequestedStatus(
-          requestedStatus
+          REQUEST_STATUSES.SENT
         );
         setPatients(patients);
       } catch (error) {
@@ -47,6 +48,63 @@ const PatientRequestsPage = () => {
   const handleRowsPerPageChange = useCallback((event: any) => {
     setRowsPerPage(event.target.value);
   }, []);
+
+  const onAcceptRequest = async (patientId: string) => {
+    try {
+      if (!patientId) {
+        throw new Error("Patient ID not found!");
+      }
+
+      await UserService.updateUser(patientId, {
+        requestedDoctorStatus: REQUEST_STATUSES.ACCEPTED,
+      });
+
+      const patients = await UserService.getPatientBasedOnRequestedStatus(
+        REQUEST_STATUSES.SENT
+      );
+      setPatients(patients);
+      toast.success("Patient Request Successfully Accepted!");
+    } catch (error) {
+      console.error(
+        `Failed to update the status of the request: ${
+          (error as Error)?.message
+        }`
+      );
+      toast.error(
+        `Failed to update the status of the request: ${
+          (error as Error)?.message
+        }`
+      );
+    }
+  };
+
+  const onDeclineRequest = async (patientId: string) => {
+    try {
+      if (!patientId) {
+        throw new Error("Patient ID not found!");
+      }
+
+      await UserService.updateUser(patientId, {
+        requestedDoctorStatus: REQUEST_STATUSES.REJECTED,
+      });
+      const patients = await UserService.getPatientBasedOnRequestedStatus(
+        REQUEST_STATUSES.SENT
+      );
+      setPatients(patients);
+      toast.success("Patient Request Successfully Rejected!");
+    } catch (error) {
+      console.error(
+        `Failed to update the status of the request: ${
+          (error as Error)?.message
+        }`
+      );
+      toast.error(
+        `Failed to update the status of the request: ${
+          (error as Error)?.message
+        }`
+      );
+    }
+  };
 
   return (
     <>
@@ -74,6 +132,8 @@ const PatientRequestsPage = () => {
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
               rowsPerPage={rowsPerPage}
+              onAcceptRequest={onAcceptRequest}
+              onDeclineRequest={onDeclineRequest}
             />
           </Stack>
         </Container>
