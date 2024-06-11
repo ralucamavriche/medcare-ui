@@ -28,7 +28,9 @@ export const getAppointmentById = async (id: string): Promise<Appointment> => {
   return response.data.appointment;
 };
 
-export const getAppointmentsByUserId = async (userId: string): Promise<Appointment[]> => {
+export const getAppointmentsByUserId = async (
+  userId: string
+): Promise<Appointment[]> => {
   const response = await api.get(`/appointment/user/${userId}/appointments`);
   if (response.status !== 200) {
     throw new Error(response.statusText);
@@ -36,7 +38,21 @@ export const getAppointmentsByUserId = async (userId: string): Promise<Appointme
   return response.data.appointments;
 };
 
-export const createAppointment = async (payload: RequestAppointment): Promise<Appointment> => {
+export const getAppointmentsByDoctorId = async (
+  doctorId: string
+): Promise<Appointment[]> => {
+  const response = await api.get(
+    `/appointment/doctor/${doctorId}/appointments`
+  );
+  if (response.status !== 200) {
+    throw new Error(response.statusText);
+  }
+  return response.data.appointments;
+};
+
+export const createAppointment = async (
+  payload: RequestAppointment
+): Promise<Appointment> => {
   const response = await api.post(`/appointment`, payload);
   if (response.status !== 201) {
     throw new Error(response.statusText);
@@ -45,7 +61,10 @@ export const createAppointment = async (payload: RequestAppointment): Promise<Ap
   return response.data.appointment;
 };
 
-export const updateAppointment = async (id: string, payload: RequestAppointment): Promise<Appointment> => {
+export const updateAppointment = async (
+  id: string,
+  payload: RequestAppointment
+): Promise<Appointment> => {
   const response = await api.patch(`/appointment/${id}`, payload);
 
   if (response.status !== 200) {

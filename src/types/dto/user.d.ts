@@ -10,7 +10,11 @@ export interface IUser {
   country?: string;
   role?: string;
   id?: string;
-  requestedDoctorStatus?: REQUEST_STATUSES.NOT_SENT | REQUEST_STATUSES.SENT;
+  requestedDoctorStatus?:
+    | REQUEST_STATUSES.NOT_SENT
+    | REQUEST_STATUSES.SENT
+    | REQUEST_STATUSES.ACCEPTED
+    | REQUEST_STATUSES.REJECTED;
   doctorId?: string;
   medicalLicenseNumber?: string;
 }

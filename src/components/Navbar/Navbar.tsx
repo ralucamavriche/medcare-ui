@@ -1,9 +1,8 @@
 import PropTypes from "prop-types";
 import {
   Notifications,
-  Search,
   MoreVert,
-  ExitToApp
+  ExitToApp,
 } from "@mui/icons-material";
 import {
   Avatar,
@@ -19,6 +18,7 @@ import {
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import useAuth from "../../hooks/useAuth";
+import { capitalize } from "../../utils/string";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -29,8 +29,13 @@ interface NavbarProps {
 
 export const Navbar = (props: NavbarProps) => {
   const { onNavOpen } = props;
-  const lgUp = useMediaQuery<Theme>((theme: Theme) => theme.breakpoints.up("lg"));
-  const { removeUser } = useAuth();
+  const lgUp = useMediaQuery<Theme>((theme: Theme) =>
+    theme.breakpoints.up("lg")
+  );
+  const { removeUser, user } = useAuth();
+
+  const role = capitalize(user?.role);
+  const email = user?.email
 
   return (
     <>
@@ -69,24 +74,31 @@ export const Navbar = (props: NavbarProps) => {
                 </SvgIcon>
               </IconButton>
             )}
-            <Tooltip title="Search">
-              <IconButton>
-                <SvgIcon fontSize="small">
-                  <Search />
-                </SvgIcon>
-              </IconButton>
-            </Tooltip>
           </Stack>
           <Stack alignItems="center" direction="row" spacing={2}>
             <Tooltip title="Notifications">
               <IconButton>
-                <Badge badgeContent={4} color="success" variant="dot">
+                <Badge badgeContent={0} color="primary">
                   <SvgIcon fontSize="small">
                     <Notifications />
                   </SvgIcon>
                 </Badge>
               </IconButton>
             </Tooltip>
+            <Badge badgeContent={role} color="primary">
+              <Tooltip title="Account">
+                <Link href="/dashboard/account">
+                  <Avatar
+                    sx={{
+                      cursor: "pointer",
+                      height: 40,
+                      width: 40,
+                    }}
+                    src="/assets/avatars/avatar-anika-visser.png"
+                  />
+                </Link>
+              </Tooltip>
+            </Badge>
             <Tooltip title="Logout">
               <IconButton onClick={removeUser} href="/auth/login">
                 <SvgIcon fontSize="small">
@@ -94,16 +106,6 @@ export const Navbar = (props: NavbarProps) => {
                 </SvgIcon>
               </IconButton>
             </Tooltip>
-            <Link href="/dashboard/account">
-              <Avatar
-                sx={{
-                  cursor: "pointer",
-                  height: 40,
-                  width: 40,
-                }}
-                src="/assets/avatars/avatar-anika-visser.png"
-              />
-            </Link>
           </Stack>
         </Stack>
       </Box>
