@@ -1,43 +1,15 @@
 import { useState, useEffect } from "react";
 import {
   Box,
-  Button,
   Card,
-  CardActions,
   CardContent,
   CardHeader,
   Divider,
   TextField,
   Unstable_Grid2 as Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
 } from "@mui/material";
 import { IUser } from "../../types/dto/user";
-
-const CITIES = [
-  {
-    value: "",
-    label: "Select City",
-  },
-  {
-    value: "Bacau",
-    label: "Bacau",
-  },
-  {
-    value: "Iasi",
-    label: "Iasi",
-  },
-  {
-    value: "Bucuresti",
-    label: "Bucuresti",
-  },
-  {
-    value: "Suceava",
-    label: "Suceava",
-  },
-];
+import Spinner from "../../components/Spinner/Spinner";
 
 const INITIAL_STATE: IUser = {
   firstName: "",
@@ -50,19 +22,15 @@ const INITIAL_STATE: IUser = {
   medicalLicenseNumber: "",
 };
 
-interface IAccountDetails {
+interface IUserAccountDetails {
   userDetails?: IUser | null;
-  onSubmit: any;
   isLoading: boolean;
-  isReadonly: boolean;
 }
 
-export const AccountDetails = (props: IAccountDetails) => {
-  const { userDetails, onSubmit, isLoading, isReadonly } = props;
+export const UserAccountDetails = (props: IUserAccountDetails) => {
+  const { userDetails, isLoading } = props;
 
   const [values, setValues] = useState<IUser>(INITIAL_STATE);
-
-  const [changedFields, setChangedFields] = useState<Partial<IUser>>({});
 
   useEffect(() => {
     setValues({
@@ -71,27 +39,17 @@ export const AccountDetails = (props: IAccountDetails) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetails]);
-
-  const handleChange = (event: any) => {
-    setValues((prevState: any) => ({
-      ...prevState,
-      [event.target.name]: event.target.value,
-    }));
-    setChangedFields((prevState: any) => ({
-      ...prevState,
-      [event.target.name]: event.target.value,
-    }));
-  };
-
-  const handleSubmit = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-    onSubmit(changedFields);
-  };
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
-    <form autoComplete="off" noValidate onSubmit={handleSubmit}>
+    <form autoComplete="off">
       <Card>
-        <CardHeader subheader="The information can be edited" title="Profile" />
+        <CardHeader
+          subheader="The information about user account"
+          title="Profile"
+        />
         <CardContent sx={{ pt: 0 }}>
           <Box sx={{ m: -1.5 }}>
             <Grid container spacing={3}>
@@ -100,10 +58,8 @@ export const AccountDetails = (props: IAccountDetails) => {
                   fullWidth
                   label="First name"
                   name="firstName"
-                  onChange={handleChange}
-                  required={!isReadonly}
                   value={values.firstName}
-                  disabled={isReadonly}
+                  disabled
                 />
               </Grid>
               <Grid xs={12} md={6}>
@@ -111,9 +67,8 @@ export const AccountDetails = (props: IAccountDetails) => {
                   fullWidth
                   label="Last name"
                   name="lastName"
-                  onChange={handleChange}
-                  required
                   value={values.lastName}
+                  disabled
                 />
               </Grid>
               {userDetails?.role === "doctor" ? (
@@ -122,7 +77,7 @@ export const AccountDetails = (props: IAccountDetails) => {
                     fullWidth
                     label="Medical License Number"
                     name="medicalLicenseNumber"
-                    onChange={handleChange}
+                    disabled
                     value={values.medicalLicenseNumber}
                   />
                 </Grid>
@@ -134,8 +89,7 @@ export const AccountDetails = (props: IAccountDetails) => {
                   fullWidth
                   label="Email Address"
                   name="email"
-                  onChange={handleChange}
-                  required
+                  disabled
                   value={values.email}
                 />
               </Grid>
@@ -144,7 +98,7 @@ export const AccountDetails = (props: IAccountDetails) => {
                   fullWidth
                   label="Phone Number"
                   name="phone"
-                  onChange={handleChange}
+                  disabled
                   value={values.phone}
                 />
               </Grid>
@@ -153,28 +107,18 @@ export const AccountDetails = (props: IAccountDetails) => {
                   fullWidth
                   label="Country"
                   name="country"
-                  onChange={handleChange}
+                  disabled
                   value={values.country}
                 />
               </Grid>
               <Grid xs={12} md={6}>
-                <FormControl fullWidth>
-                  <InputLabel id="city">City</InputLabel>
-                  <Select
-                    labelId="city"
-                    id="city2"
-                    name="city"
-                    value={values.city}
-                    label="Select City"
-                    onChange={handleChange}
-                  >
-                    {CITIES.map(({ value, label }) => (
-                      <MenuItem key={value} value={value}>
-                        {label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+                <TextField
+                  fullWidth
+                  label="City"
+                  name="city"
+                  disabled
+                  value={values.city}
+                />
               </Grid>
 
               <Grid xs={12} md={6}>
@@ -182,7 +126,7 @@ export const AccountDetails = (props: IAccountDetails) => {
                   fullWidth
                   label="Address"
                   name="address"
-                  onChange={handleChange}
+                  disabled
                   value={values.address}
                 />
               </Grid>
@@ -190,11 +134,6 @@ export const AccountDetails = (props: IAccountDetails) => {
           </Box>
         </CardContent>
         <Divider />
-        <CardActions sx={{ justifyContent: "flex-end" }}>
-          <Button disabled={isLoading} variant="contained" type="submit">
-            {isLoading ? "Loading..." : "Save details"}
-          </Button>
-        </CardActions>
       </Card>
     </form>
   );

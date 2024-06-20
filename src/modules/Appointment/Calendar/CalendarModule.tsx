@@ -83,18 +83,20 @@ const CalendarModule = () => {
         const appointments = await serviceFunction(id);
 
         const formattedAppointments: Partial<EventInput>[] = appointments.map(
-          ({ id, title, startDate, endDate, description, status }) => ({
+          ({ id, title, startDate, endDate, description, status, userId }) => ({
             id,
             title,
             start: startDate,
             end: endDate,
             description,
             status,
+            userId: userId.id,
+            userName: `${userId.firstName} ${userId.lastName}`,
             ...BACKGROUND_COLOR_BASED_ON_STATUS[status as REQUEST_STATUSES],
           })
         );
 
-        setEvents(formattedAppointments)
+        setEvents(formattedAppointments);
       } catch (error) {
         setEvents([]);
         console.error(
@@ -138,7 +140,7 @@ const CalendarModule = () => {
         ...event,
         start: moment(event.start).utc().format(),
         end: moment(event.end).utc().format(),
-      })
+      });
       setShowEventModal(false);
       setCurrentEvent(DEFAULT_EVENT_INPUT);
       toast.success("Appointment Successfully created!");
@@ -175,8 +177,6 @@ const CalendarModule = () => {
         author: `${firstName} ${lastName}`,
         status: status,
       };
-      console.log(JSON.stringify(payload));
-
       await AppointmentService.updateAppointment(id, payload);
 
       eventImpl.setProp("title", title);
@@ -226,6 +226,10 @@ const CalendarModule = () => {
   };
 
   const handleOnDateSelect = (selectInfo: DateSelectArg) => {
+    if (!isPatient) {
+      return;
+    }
+
     const calendarApi = selectInfo.view.calendar;
     const { startStr, endStr, allDay } = selectInfo;
 
@@ -238,19 +242,18 @@ const CalendarModule = () => {
       allDay,
     };
 
-    console.log(newEvent);
-
     setCurrentEvent(newEvent);
     setShowEventModal(true);
   };
 
   const handleOnEventClick = (clickInfo: EventClickArg) => {
+    console.log(clickInfo.event);
     const { title, startStr, endStr, allDay, extendedProps } = clickInfo.event;
     const { description } = extendedProps;
 
     const newEvent: EventInput = {
       ...DEFAULT_EVENT_INPUT,
-      type: OperationEvent.EDIT,
+      type: isDoctor ? OperationEvent.MANANGE : OperationEvent.EDIT,
       eventImpl: clickInfo.event,
       title,
       description,
@@ -258,10 +261,50 @@ const CalendarModule = () => {
       end: endStr,
       allDay,
     };
-    console.log(newEvent);
 
     setCurrentEvent(newEvent);
     setShowEventModal(true);
+  };
+
+  const handleOnManage = async (
+    eventImpl: EventImpl,
+    status: REQUEST_STATUSES
+  ) => {
+    const { id } = eventImpl;
+
+    try {
+      if (!id) {
+        throw new Error("Id not defined");
+      }
+
+      const payload: RequestAppointment = {
+        status,
+      };
+
+      await AppointmentService.updateAppointment(id, payload);
+
+      const eventStyle = BACKGROUND_COLOR_BASED_ON_STATUS[status];
+      const { backgroundColor, borderColor, textColor } = eventStyle;
+
+      eventImpl.setProp("backgroundColor", backgroundColor);
+      eventImpl.setProp("borderColor", borderColor);
+      eventImpl.setProp("textColor", textColor);
+      eventImpl.setExtendedProp("status", status);
+
+      setShowEventModal(false);
+      toast.success(
+        `Appointment Successfully ${
+          status === REQUEST_STATUSES.ACCEPTED ? "Accepted" : "Rejected"
+        }!`
+      );
+    } catch (error) {
+      console.error(
+        `Failed to manage the appointment: ${(error as Error)?.message}`
+      );
+      toast.error(
+        `Failed to manage the appointment: ${(error as Error)?.message}`
+      );
+    }
   };
 
   if (isLoading || !events) {
@@ -315,6 +358,7 @@ const CalendarModule = () => {
               setShowEventModal(false);
               setCurrentEvent(DEFAULT_EVENT_INPUT);
             }}
+            handleOnManage={handleOnManage}
             handleOnCreate={handleOnCreateEvent}
             handleOnRemove={handleOnRemoveEvent}
             handleOnUpdate={handleOnUpdateEvent}

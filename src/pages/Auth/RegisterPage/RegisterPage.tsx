@@ -26,7 +26,7 @@ const RegisterPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "asd@yahoo.com",
+      email: "doctor@yahoo.com",
       firstName: "admin",
       lastName: "admin",
       password: "Password23.23",

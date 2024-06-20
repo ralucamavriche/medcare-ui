@@ -8,7 +8,7 @@ import {
 
 import { Helmet } from "react-helmet";
 
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import AccountProfile from "../../modules/Account/AccountProfile";
 import { AccountDetails } from "../../modules/Account/AccountDetails";
 import { updateUser } from "../../services/user.service";
@@ -17,26 +17,26 @@ import { IUser } from "../../types/dto/user";
 import { useState } from "react";
 
 const AccountPage = () => {
-  const { user, addUser } = useAuth()
-  const [isLoading, setIsLoading] = useState(false)
+  const { user, addUser } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleOnSubmitChanges = async (payload: Partial<IUser>) => {
-    const { id } = user || {}
+    const { id } = user || {};
 
     try {
-      if(!id) {
-        throw new Error('Failed to submit changes. Id not defined')
+      if (!id) {
+        throw new Error("Failed to submit changes. Id not defined");
       }
-      setIsLoading(true)
+      setIsLoading(true);
       const user = await updateUser(id, payload);
       toast.success("User Successfully Updated!");
       addUser(user);
     } catch (error) {
-      toast.error("Failed to update user");
+      toast.error("Failed to update user!");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <>
@@ -61,7 +61,11 @@ const AccountPage = () => {
                   <AccountProfile userDetails={user} />
                 </Grid>
                 <Grid xs={12} md={6} lg={8}>
-                  <AccountDetails userDetails={user} isLoading={isLoading} onSubmit={handleOnSubmitChanges} />
+                  <AccountDetails
+                    userDetails={user}
+                    isLoading={isLoading}
+                    onSubmit={handleOnSubmitChanges}
+                  />
                 </Grid>
               </Grid>
             </div>

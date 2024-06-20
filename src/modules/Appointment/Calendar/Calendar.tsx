@@ -18,7 +18,10 @@ interface CalendarProps {
   handleOnEventClick: (clickInfo: EventClickArg) => void;
 }
 
-const renderEventContent = ({ timeText, event: { title } }: EventContentArg) => {
+const renderEventContent = ({
+  timeText,
+  event: { title },
+}: EventContentArg) => {
   // TODO: This is where you style the event eg. 3ad
   // const startDate = start;
   // const formattedStartDate = startDate.toLocaleDateString('en-US', {
@@ -66,16 +69,16 @@ const Calendar = forwardRef(
           }}
           businessHours={{
             // days of week. an array of zero-based day of week integers (0=Sunday)
-            daysOfWeek: [ 1, 2, 3, 4, 5 ], // Monday - Thursday
-            startTime: '10:00', // a start time (10am in this example)
-            endTime: '18:00', // an end time (6pm in this example)
+            daysOfWeek: [1, 2, 3, 4, 5], // Monday - Thursday
+            startTime: "10:00", // a start time (10am in this example)
+            endTime: "18:00", // an end time (6pm in this example)
           }}
           allDaySlot={false}
           slotMinTime={"10:00:00"}
           slotMaxTime={"18:00:00"}
           height={"auto"}
           scrollTime={"10:00:00"}
-          hiddenDays={[ 0,6 ]}
+          hiddenDays={[0, 6]}
           initialView="timeGridWeek"
           editable={true}
           selectable={true}
@@ -86,8 +89,6 @@ const Calendar = forwardRef(
           select={handleOnDateSelect}
           eventContent={renderEventContent}
           eventClick={handleOnEventClick}
-          eventAdd={(arg) => console.log('eventAdd', arg)}
-          
         />
       </Paper>
     );

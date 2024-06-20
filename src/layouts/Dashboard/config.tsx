@@ -2,10 +2,10 @@ import { Person, Home, Create } from "@mui/icons-material";
 import { SvgIcon } from "@mui/material";
 import { RESOURCES } from "../../permissions";
 
-export const BASE_PATH = '/dashboard'
-export const UNAUTHORIZED_PAGE = '/unauthorized'
-export const NOT_FOUND_PAGE = '/not-found'
-export const LOGIN_PAGE = '/auth/login'
+export const BASE_PATH = "/dashboard";
+export const UNAUTHORIZED_PAGE = "/unauthorized";
+export const NOT_FOUND_PAGE = "/not-found";
+export const LOGIN_PAGE = "/auth/login";
 
 export const enabledRoutes = [
   BASE_PATH,
@@ -15,15 +15,16 @@ export const enabledRoutes = [
   `${BASE_PATH}/${RESOURCES.DOCTORS_REQUESTS}`,
   `${BASE_PATH}/${RESOURCES.DOCTOR_AVAILABLE}`,
   `${BASE_PATH}/${RESOURCES.PATIENT_REQUEST}`,
-  `${BASE_PATH}/${RESOURCES.MY_PATIENTS}`
-]
+  `${BASE_PATH}/${RESOURCES.MY_PATIENTS}`,
+  `${BASE_PATH}/${RESOURCES.USER_ACCOUNT}`,
+];
 
 export const pagesWithPermissions = [
   `${BASE_PATH}/${RESOURCES.DOCTORS_REQUESTS}`,
   `${BASE_PATH}/${RESOURCES.DOCTOR_AVAILABLE}`,
   `${BASE_PATH}/${RESOURCES.PATIENT_REQUEST}`,
-  `${BASE_PATH}/${RESOURCES.MY_PATIENTS}`
-]
+  `${BASE_PATH}/${RESOURCES.MY_PATIENTS}`,
+];
 
 export const dashboardItems = [
   {
@@ -36,7 +37,7 @@ export const dashboardItems = [
     ),
     resource: RESOURCES.DASHBOARD,
     disabled: false,
-    external: false
+    external: false,
   },
   {
     title: "Appointment",
@@ -48,7 +49,7 @@ export const dashboardItems = [
     ),
     resource: RESOURCES.APPOINTEMNT,
     disabled: false,
-    external: false
+    external: false,
   },
   {
     title: "Account",
@@ -60,11 +61,11 @@ export const dashboardItems = [
     ),
     resource: RESOURCES.ACCOUNT,
     disabled: false,
-    external: false
+    external: false,
   },
   {
     title: "Doctors Request",
-    path:  `${BASE_PATH}/${RESOURCES.DOCTORS_REQUESTS}`,
+    path: `${BASE_PATH}/${RESOURCES.DOCTORS_REQUESTS}`,
     icon: (
       <SvgIcon fontSize="small">
         <Person />
@@ -72,7 +73,7 @@ export const dashboardItems = [
     ),
     resource: RESOURCES.DOCTORS_REQUESTS,
     disabled: false,
-    external: false
+    external: false,
   },
   {
     title: "Available Doctor",
@@ -84,7 +85,7 @@ export const dashboardItems = [
     ),
     resource: RESOURCES.DOCTOR_AVAILABLE,
     disabled: false,
-    external: false
+    external: false,
   },
   {
     title: "Patient Requests",
@@ -96,7 +97,7 @@ export const dashboardItems = [
     ),
     resource: RESOURCES.PATIENT_REQUEST,
     disabled: false,
-    external: false
+    external: false,
   },
   {
     title: "My Patients",
@@ -108,6 +109,6 @@ export const dashboardItems = [
     ),
     resource: RESOURCES.MY_PATIENTS,
     disabled: false,
-    external: false
-  }
+    external: false,
+  },
 ];

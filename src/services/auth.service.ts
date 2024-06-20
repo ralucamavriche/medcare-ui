@@ -48,7 +48,7 @@ export const login = async (email: string, password: string) => {
     saveToken(response.data.token);
     return response.data.user;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 

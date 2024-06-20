@@ -19,6 +19,7 @@ import MyPatientsPage from "./pages/Doctors/MyPatientsPage";
 import DashboardLayout from "./layouts/Dashboard/DashboardLayout";
 import Unauthorized from "./pages/Unauthorized";
 import HomeLayout from "./layouts/HomeLayout/HomeLayout";
+import UserAccountPage from "./pages/Account/UserAccountPage";
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +38,7 @@ const App = () => {
       if (!error) {
         setUserData(user);
       }
-      
+
       setIsLoading(false);
     })();
   }, []);
@@ -75,6 +76,7 @@ const App = () => {
                 element={<PatientRequestsForDoctorPage />}
               />
               <Route path="my-patients" element={<MyPatientsPage />} />
+              <Route path="user-account" element={<UserAccountPage />} />
             </Route>
             <Route path="/auth" element={<AuthLayout />}>
               <Route path="login" element={<LoginPage />} />

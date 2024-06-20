@@ -78,17 +78,12 @@ export const getPatientsByDoctorId = async (doctorId: string) => {
   }
 };
 
-export const getUserById = async (id: string) => {
-  try {
-    const response = await api.get(`/users/${id}`);
-    if (response.status !== 200) {
-      throw new Error(response.statusText);
-    }
-    return response.data.user;
-  } catch (error: any) {
-    console.error(error);
-    return handleError("Failed to get the user!", error.code);
+export const getUserById = async (id: string): Promise<IUser> => {
+  const response = await api.get(`/users/${id}`);
+  if (response.status !== 200) {
+    throw new Error(response.statusText);
   }
+  return response.data.user;
 };
 
 export const createUser = async (payload: any) => {
@@ -106,7 +101,6 @@ export const createUser = async (payload: any) => {
 
 export const updateUser = async (id: string, payload: any): Promise<IUser> => {
   const response = await api.patch(`/users/${id}`, payload);
-  console.log(response);
   if (response.status !== 200) {
     throw new Error(response.statusText);
   }

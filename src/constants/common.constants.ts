@@ -1,6 +1,7 @@
 export enum OperationEvent {
   ADD,
   EDIT,
+  MANANGE,
 }
 
 export enum REQUEST_STATUSES {

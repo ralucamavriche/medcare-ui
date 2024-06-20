@@ -1,18 +1,16 @@
-import { Link as RouterLink } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Link as RouterLink } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { Box, Button, Container, Typography } from "@mui/material";
 
 const Unauthorized = () => (
   <>
     <Helmet>
-      <title>
-        Error: Unauthorized
-      </title>
+      <title>Error: Unauthorized</title>
     </Helmet>
     <Box
       sx={{
-        backgroundColor: 'background.paper',
-        flexGrow: 1
+        backgroundColor: "background.paper",
+        flexGrow: 1,
       }}
     >
       <Container
@@ -20,39 +18,27 @@ const Unauthorized = () => (
         sx={{
           px: 5,
           py: 14,
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'column'
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <Box
           sx={{
-            '& img': {
-              maxWidth: '100%'
-            }
+            "& img": {
+              maxWidth: "100%",
+            },
           }}
         >
           <img src="/assets/errors/error-404.svg" alt="erorr" />
         </Box>
-        <Typography
-          align="center"
-          sx={{ my: 2 }}
-          variant="h3"
-        >
+        <Typography align="center" sx={{ my: 2 }} variant="h3">
           Ooops! Not allowed. Don't have rights
         </Typography>
-        <Typography
-          align="center"
-          color="text.secondary"
-          variant="body2"
-        >
+        <Typography align="center" color="text.secondary" variant="body2">
           You don't have right to access this page!
         </Typography>
-        <Button
-          to="/"
-          component={RouterLink}
-          sx={{ mt: 2 }}
-        >
+        <Button to="/" component={RouterLink} sx={{ mt: 2 }}>
           Take me home
         </Button>
       </Container>
