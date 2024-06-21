@@ -3,5 +3,5 @@ type EnvType = {
 };
 
 export const env: EnvType = {
-  REACT_APP_VITE_BACKEND_API: process?.env?.REACT_APP_VITE_BACKEND_API || "",
+  REACT_APP_VITE_BACKEND_API: "",
 };
