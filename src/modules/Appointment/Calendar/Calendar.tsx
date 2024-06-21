@@ -30,6 +30,7 @@ const renderEventContent = ({
   //   month: 'long',
   //   day: 'numeric'
   // });
+  console.log(timeText);
   return (
     <>
       {/* <b>{timeText}</b> */}

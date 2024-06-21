@@ -65,6 +65,7 @@ const AccountPage = () => {
                     userDetails={user}
                     isLoading={isLoading}
                     onSubmit={handleOnSubmitChanges}
+                    isReadonly={false}
                   />
                 </Grid>
               </Grid>

@@ -1,9 +1,5 @@
 import PropTypes from "prop-types";
-import {
-  Notifications,
-  MoreVert,
-  ExitToApp,
-} from "@mui/icons-material";
+import { Notifications, MoreVert, ExitToApp } from "@mui/icons-material";
 import {
   Avatar,
   Badge,
@@ -35,8 +31,6 @@ export const Navbar = (props: NavbarProps) => {
   const { removeUser, user } = useAuth();
 
   const role = capitalize(user?.role);
-  const email = user?.email
-
   return (
     <>
       <Box
