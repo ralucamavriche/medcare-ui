@@ -28,6 +28,19 @@ export const getAppointmentById = async (id: string): Promise<Appointment> => {
   return response.data.appointment;
 };
 
+export const getAppointmentsByDoctorIdAndUserId = async (
+  doctorId?: string,
+  userId?: string
+): Promise<Appointment[]> => {
+  const response = await api.get(
+    `/appointment/doctor2/${doctorId}/appointments/${userId}`
+  );
+  if (response.status !== 200) {
+    throw new Error(response.statusText);
+  }
+  return response.data.appointments;
+};
+
 export const getAppointmentsByUserId = async (
   userId: string
 ): Promise<Appointment[]> => {

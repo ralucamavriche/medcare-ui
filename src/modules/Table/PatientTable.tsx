@@ -13,6 +13,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import moment from "moment";
 
 interface IPatientTable {
   count: number;
@@ -98,6 +99,7 @@ const PatientTable = (props: IPatientTable) => {
             </TableHead>
             <TableBody>
               {items.map((customer: any) => {
+                const createdAt = moment(customer.createdAt).format('MMMM Do, YYYY h:mm:ss A');
                 return (
                   <TableRow hover key={customer.id}>
                     <TableCell>
@@ -113,7 +115,7 @@ const PatientTable = (props: IPatientTable) => {
                     <TableCell>{customer.lastName}</TableCell>
                     <TableCell>{customer.email}</TableCell>
                     <TableCell>{customer.phone}</TableCell>
-                    <TableCell>{customer.createdAt}</TableCell>
+                    <TableCell>{createdAt}</TableCell>
                     <TableCell>
                       <Stack direction="row" spacing={2}>
                         <Button

@@ -16,6 +16,7 @@ import {
 import { UserService } from "../../services";
 import { toast } from "react-toastify";
 import { REQUEST_STATUSES } from "../../constants/common.constants";
+import moment from "moment";
 
 interface IDoctorsValidationTable {
   count: number;
@@ -122,6 +123,7 @@ const DoctorsValidationTable = (props: IDoctorsValidationTable) => {
             </TableHead>
             <TableBody>
               {items.map((customer: any) => {
+                 const createdAt = moment(customer.createdAt).format('MMMM Do, YYYY h:mm:ss A');
                 return (
                   <TableRow hover key={customer.id}>
                     <TableCell>
@@ -137,7 +139,7 @@ const DoctorsValidationTable = (props: IDoctorsValidationTable) => {
                     <TableCell>{customer.lastName}</TableCell>
                     <TableCell>{customer.medicalLicenseNumber}</TableCell>
                     <TableCell>{customer.email}</TableCell>
-                    <TableCell>{customer.createdAt}</TableCell>
+                    <TableCell>{createdAt}</TableCell>
                     <TableCell>
                       <Stack direction="row" spacing={2}>
                         <Button

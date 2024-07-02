@@ -74,6 +74,9 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
                                     Phone number
                                 </TableCell>
                                 <TableCell>
+                                    Address
+                                </TableCell>
+                                <TableCell>
                                     Request
                                 </TableCell>
                             </TableRow>
@@ -110,6 +113,9 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
                                         </TableCell>
                                         <TableCell>
                                             {customer.phone}
+                                        </TableCell>
+                                        <TableCell>
+                                            {customer.city}, {customer.address}
                                         </TableCell>
                                         <TableCell>
                                             <Stack direction="row" spacing={2}>

@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { IUser } from "../../types/dto/user";
+import moment from "moment";
 
 interface IAccountProfile {
   userDetails: IUser | null
@@ -25,6 +26,7 @@ const AccountProfile = (props: IAccountProfile) => {
 
     return () => clearInterval(interval);
   }, []);
+  const formatTime = moment(time).format('MMMM Do, YYYY h:mm:ss A');
 
   return (
     <>
@@ -52,7 +54,7 @@ const AccountProfile = (props: IAccountProfile) => {
               {city} {country}
             </Typography>
             <Typography color="text.secondary" variant="body2">
-              {time}
+              {formatTime}
             </Typography>
           </Box>
         </CardContent>

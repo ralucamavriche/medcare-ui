@@ -45,6 +45,11 @@ const BACKGROUND_COLOR_BASED_ON_STATUS = {
     borderColor: "green",
     textColor: "white",
   },
+  [REQUEST_STATUSES.CONFIDENTIAL]: {
+    backgroundColor: "grey",
+    borderColor: "grey",
+    textColor: "white",
+  },
 };
 
 const DEFAULT_EVENT_INPUT: EventInput = {
@@ -76,11 +81,16 @@ const CalendarModule = () => {
     setIsLoading(true);
     const fetchAppointments = async (id: string, isDoctor: boolean) => {
       try {
-        const serviceFunction = isDoctor
-          ? AppointmentService.getAppointmentsByDoctorId
-          : AppointmentService.getAppointmentsByUserId;
-
-        const appointments = await serviceFunction(id);
+        let appointments = [];
+        if (isDoctor) {
+          appointments = await AppointmentService.getAppointmentsByDoctorId(id);
+        } else {
+          appointments =
+            await AppointmentService.getAppointmentsByDoctorIdAndUserId(
+              doctorId,
+              id
+            );
+        }
 
         const formattedAppointments: Partial<EventInput>[] = appointments.map(
           ({ id, title, startDate, endDate, description, status, userId }) => ({
@@ -111,6 +121,7 @@ const CalendarModule = () => {
     };
 
     userId && fetchAppointments(userId, isDoctor);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, isDoctor]);
 
   const handleOnCreateEvent = async (event: EventInput) => {
@@ -247,9 +258,12 @@ const CalendarModule = () => {
   };
 
   const handleOnEventClick = (clickInfo: EventClickArg) => {
-    console.log(clickInfo.event);
     const { title, startStr, endStr, allDay, extendedProps } = clickInfo.event;
-    const { description } = extendedProps;
+    const { description, status } = extendedProps;
+
+    if (status === REQUEST_STATUSES.CONFIDENTIAL) {
+      return;
+    }
 
     const newEvent: EventInput = {
       ...DEFAULT_EVENT_INPUT,
