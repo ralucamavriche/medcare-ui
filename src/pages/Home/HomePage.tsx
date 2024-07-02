@@ -1,5 +1,13 @@
 import { Helmet } from "react-helmet";
-import { Box, Typography, Container, Button, Grid, Stack } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Container,
+  Button,
+  Grid,
+  Stack,
+} from "@mui/material";
+import { Link } from "react-router-dom";
 
 import Image from "/assets/images/main.png";
 import FeedbackSection from "../../modules/Home/FeedbackSection";
@@ -86,7 +94,12 @@ const HomePage = () => {
                   Navigating appointments with ease, because your well-being
                   matters.
                 </Typography>
-                <Button variant="contained">Let's start!</Button>
+                <Box component={Link} to="/auth/login">
+                    <Button variant="contained"
+                    >
+                     Let's start!
+                    </Button>
+                  </Box>
               </Grid>
             </Grid>
           </Container>

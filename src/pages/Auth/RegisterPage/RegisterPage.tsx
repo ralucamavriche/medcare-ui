@@ -27,8 +27,8 @@ const RegisterPage = () => {
   const formik = useFormik({
     initialValues: {
       email: "doctor@yahoo.com",
-      firstName: "admin",
-      lastName: "admin",
+      firstName: "doctor",
+      lastName: "doctor",
       password: "Password23.23",
       medicalLicenseNumber: "",
       isDoctor: false,
