@@ -16,7 +16,7 @@ interface IAccountProfile {
 
 const AccountProfile = (props: IAccountProfile) => {
   const { userDetails } = props
-  const { firstName, country, city } = userDetails || {}
+  const { firstName, country, city, role } = userDetails || {}
   const [time, setTime] = useState(new Date().toISOString())
 
   useEffect(() => {
@@ -39,14 +39,25 @@ const AccountProfile = (props: IAccountProfile) => {
               flexDirection: "column",
             }}
           >
-            <Avatar
-              src="/assets/avatars/avatar-anika-visser.png"
-              sx={{
-                height: 80,
-                mb: 2,
-                width: 80,
-              }}
-            />
+            {role === "DOCTOR" ? (
+                <Avatar
+                src="/assets/avatars/avatar-doctor.jpg"
+                sx={{
+                  height: 80,
+                  mb: 2,
+                  width: 80,
+                }}
+              />
+              ) : (
+                <Avatar
+                src="/assets/avatars/avatar-anika-visser.png"
+                sx={{
+                  height: 80,
+                  mb: 2,
+                  width: 80,
+                }}
+              />
+              )}
             <Typography gutterBottom variant="h5">
               {firstName}
             </Typography>

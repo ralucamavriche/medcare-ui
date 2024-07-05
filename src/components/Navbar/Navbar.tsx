@@ -82,14 +82,25 @@ export const Navbar = (props: NavbarProps) => {
             <Badge badgeContent={role} color="primary">
               <Tooltip title="Account">
                 <Link href="/dashboard/account">
-                  <Avatar
+                  {user?.role === "DOCTOR" ? (
+                    <Avatar
+                    src="/assets/avatars/avatar-doctor.jpg"
                     sx={{
                       cursor: "pointer",
                       height: 40,
                       width: 40,
                     }}
-                    src="/assets/avatars/avatar-anika-visser.png"
                   />
+                  ) : (
+                    <Avatar
+                      src="/assets/avatars/avatar-anika-visser.png"
+                      sx={{
+                        cursor: "pointer",
+                        height: 40,
+                        width: 40,
+                      }}
+                    />
+                  )}
                 </Link>
               </Tooltip>
             </Badge>

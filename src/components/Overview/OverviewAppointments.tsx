@@ -132,7 +132,6 @@ export const OverviewAppointments = (props: IOverviewAppointments) => {
         title="Appointment"
       />
       <CardContent>
-        Signed Up
         <Chart
           height={350}
           options={chartOptions}

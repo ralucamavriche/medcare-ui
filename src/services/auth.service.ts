@@ -77,7 +77,7 @@ export const register = async (
     saveToken(response.data.token);
     return response.data.user;
   } catch (error: any) {
-    throw new Error(error.response.data.error);
+    console.error(error);
   }
 };
 

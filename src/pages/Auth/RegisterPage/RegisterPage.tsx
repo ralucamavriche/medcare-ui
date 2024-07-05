@@ -66,9 +66,7 @@ const RegisterPage = () => {
           role
         );
         if (!user) {
-          throw new Error(
-            "Failed to register. The data are incorrect. Password must be at least 8 characters!"
-          );
+          throw new Error('Failed to register. The data are incorrect. Password must be at least 8 characters!')
         }
         addUser(user);
         navigate("/dashboard");

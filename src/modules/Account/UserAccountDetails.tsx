@@ -71,7 +71,7 @@ export const UserAccountDetails = (props: IUserAccountDetails) => {
                   disabled
                 />
               </Grid>
-              {userDetails?.role === "doctor" ? (
+              {userDetails?.role === "DOCTOR" ? (
                 <Grid xs={12} md={6}>
                   <TextField
                     fullWidth

@@ -11,7 +11,7 @@ import { ArrowUpward, ArrowDownward, Group } from "@mui/icons-material";
 export interface ITotalUsersProps {
   difference: number;
   positive: boolean;
-  value: string;
+  value: number;
   sx: object;
 }
 

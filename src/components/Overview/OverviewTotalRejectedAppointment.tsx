@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 interface IOverviewTotalRejectedAppointment {
-  value: string;
+  value: number;
   sx: object;
 }
 

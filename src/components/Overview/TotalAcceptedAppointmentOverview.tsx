@@ -17,7 +17,7 @@ interface ITotalAcceptedAppointmentOverview {
   difference?: number;
   positive?: boolean;
   sx?: object;
-  value?: string;
+  value?: number;
 }
 
 export const TotalAcceptedAppointmentOverview = (

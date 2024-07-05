@@ -1,4 +1,5 @@
 import * as api from "../api/api";
+import { REQUEST_STATUSES } from "../constants/common.constants";
 import { Appointment, RequestAppointment } from "../types/dto/appointment";
 // const GENERAL_ERROR = {
 //   error: "Something went wrong!",
@@ -18,6 +19,36 @@ export const getAppointments = async (): Promise<Appointment[]> => {
     throw new Error(response.statusText);
   }
   return response.data.appointments;
+};
+
+export const getAppointmentsByStatus = async (
+  status: string
+): Promise<Appointment[]> => {
+  const response = await api.get("/appointment/status", {
+    params: { status },
+  });
+  if (response.status !== 200) {
+    throw new Error(response.statusText);
+  }
+  return response.data.appointments;
+};
+
+export const getAcceptedAndRejectedCounts = async () => {
+  try {
+    const acceptedAppointments = await getAppointmentsByStatus(
+      REQUEST_STATUSES.ACCEPTED
+    );
+    const rejectedAppointments = await getAppointmentsByStatus(
+      REQUEST_STATUSES.REJECTED
+    );
+    return {
+      acceptedCount: acceptedAppointments.length,
+      rejectedCount: rejectedAppointments.length,
+    };
+  } catch (error) {
+    console.error("Error fetching appointment counts:", error);
+    throw error;
+  }
 };
 
 export const getAppointmentById = async (id: string): Promise<Appointment> => {

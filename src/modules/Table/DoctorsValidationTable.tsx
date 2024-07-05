@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   Container,
+  Link,
   Stack,
   Table,
   TableBody,
@@ -13,9 +14,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { UserService } from "../../services";
-import { toast } from "react-toastify";
-import { REQUEST_STATUSES } from "../../constants/common.constants";
+import * as ReactRouter from "react-router-dom";
 import moment from "moment";
 
 interface IDoctorsValidationTable {
@@ -25,39 +24,10 @@ interface IDoctorsValidationTable {
   onRowsPerPageChange: any;
   page: number;
   rowsPerPage: number;
+  onAcceptRequest: (userId: string) => void;
+  onDeclineRequest: (userId: string) => void;
 }
 
-const onAcceptRequest = async (userId: string) => {
-  try {
-    if (!userId) {
-      throw new Error("Doctor ID not found!");
-    }
-
-    await UserService.updateUser(userId, {
-      status: REQUEST_STATUSES.ACCEPTED,
-    });
-    toast.success("Doctor request successfully accepted!");
-  } catch (error) {
-    console.error(`Failed to accept the request: ${(error as Error)?.message}`);
-    toast.error(`Failed to accept the request: ${(error as Error)?.message}`);
-  }
-};
-
-const onDeclineRequest = async (userId: string) => {
-  try {
-    if (!userId) {
-      throw new Error("Doctor ID not found!");
-    }
-
-    await UserService.updateUser(userId, {
-      status: REQUEST_STATUSES.REJECTED,
-    });
-    toast.success("Doctor request successfully rejected!");
-  } catch (error) {
-    console.error(`Failed to reject the request: ${(error as Error)?.message}`);
-    toast.error(`Failed to reject the request: ${(error as Error)?.message}`);
-  }
-};
 const DoctorsValidationTable = (props: IDoctorsValidationTable) => {
   const {
     count = 0,
@@ -66,6 +36,8 @@ const DoctorsValidationTable = (props: IDoctorsValidationTable) => {
     onRowsPerPageChange,
     page = 0,
     rowsPerPage = 0,
+    onAcceptRequest,
+    onDeclineRequest,
   } = props;
 
   if (!Array.isArray(items) || !items.length) {
@@ -123,14 +95,22 @@ const DoctorsValidationTable = (props: IDoctorsValidationTable) => {
             </TableHead>
             <TableBody>
               {items.map((customer: any) => {
-                 const createdAt = moment(customer.createdAt).format('MMMM Do, YYYY h:mm:ss A');
+                const createdAt = moment(customer.createdAt).format(
+                  "MMMM Do, YYYY h:mm:ss A"
+                );
                 return (
                   <TableRow hover key={customer.id}>
                     <TableCell>
                       <Stack alignItems="center" direction="row" spacing={2}>
-                        <Avatar src="/assets/avatars/avatar-doctor.jpg">
-                          {customer.firstName}
-                        </Avatar>
+                        <Link
+                          component={ReactRouter.Link}
+                          to={`/dashboard/user-account?id=${customer.id}`}
+                          target="_blank"
+                        >
+                          <Avatar src="/assets/avatars/avatar-doctor.jpg">
+                            {customer.firstName}
+                          </Avatar>
+                        </Link>
                         <Typography variant="subtitle2">
                           {customer.firstName}
                         </Typography>
