@@ -10,14 +10,14 @@ import { AppointmentService, UserService } from "../../services";
 import { toast } from "react-toastify";
 
 const DashboardPage = () => {
-  const [users, setUsers] = useState([]);
+  // const [setUsers] = useState([[]]);
   const [totalUsers, setTotalUsers] = useState(0);
   const [counts, setCounts] = useState({ acceptedCount: 0, rejectedCount: 0 });
 
   const getUsers = async () => {
     try {
       const users = await UserService.getUsers();
-      setUsers(users);
+      // setUsers(users);
       setTotalUsers(users.length);
     } catch (error) {
       console.error(
