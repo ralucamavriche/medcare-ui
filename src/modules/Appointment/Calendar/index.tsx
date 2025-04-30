@@ -1,1 +1,1 @@
-export { default  } from './CalendarModule'
+export { default } from "./CalendarModule";

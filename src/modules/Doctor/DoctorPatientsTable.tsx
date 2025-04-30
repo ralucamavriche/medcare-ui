@@ -89,7 +89,7 @@ const DoctorPatientsTable = (props: IDoctorPatientsTable) => {
             <TableBody>
               {items.map((customer: any) => {
                 const createdAt = moment(customer.createdAt).format(
-                  "MMMM Do, YYYY h:mm:ss A"
+                  "MMMM Do, YYYY h:mm:ss A",
                 );
                 return (
                   <TableRow hover key={customer.id}>

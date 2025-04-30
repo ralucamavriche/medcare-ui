@@ -17,13 +17,13 @@ import moment from "moment";
 
 interface IPatientTable {
   count: number;
-  items: Record<string, any>[],
+  items: Record<string, any>[];
   onPageChange: any;
   onRowsPerPageChange: any;
   page: number;
   rowsPerPage: number;
-  onAcceptRequest: (patientId: string) =>  void,
-  onDeclineRequest: (patientId: string) =>  void
+  onAcceptRequest: (patientId: string) => void;
+  onDeclineRequest: (patientId: string) => void;
 }
 
 const PatientTable = (props: IPatientTable) => {
@@ -38,48 +38,42 @@ const PatientTable = (props: IPatientTable) => {
     onDeclineRequest,
   } = props;
 
-  if(!Array.isArray(items) || !items.length) {
-    return  <Box
-    sx={{
-      backgroundColor: 'background.paper',
-      flexGrow: 1
-    }}
-  >
-    <Container
-      maxWidth="md"
-      sx={{
-        px: 5,
-        py: 14,
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'column'
-      }}
-    >
+  if (!Array.isArray(items) || !items.length) {
+    return (
       <Box
         sx={{
-          '& img': {
-            maxWidth: '100%'
-          }
+          backgroundColor: "background.paper",
+          flexGrow: 1,
         }}
       >
-        <img src="/assets/errors/error-404.svg" alt="error" />
+        <Container
+          maxWidth="md"
+          sx={{
+            px: 5,
+            py: 14,
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <Box
+            sx={{
+              "& img": {
+                maxWidth: "100%",
+              },
+            }}
+          >
+            <img src="/assets/errors/error-404.svg" alt="error" />
+          </Box>
+          <Typography align="center" sx={{ my: 2 }} variant="h3">
+            Nothing here!
+          </Typography>
+          <Typography align="center" color="text.secondary" variant="body2">
+            The table is empty!
+          </Typography>
+        </Container>
       </Box>
-      <Typography
-        align="center"
-        sx={{ my: 2 }}
-        variant="h3"
-      >
-        Nothing here!
-      </Typography>
-      <Typography
-        align="center"
-        color="text.secondary"
-        variant="body2"
-      >
-        The table is empty!
-      </Typography>
-    </Container>
-  </Box>
+    );
   }
 
   return (
@@ -99,7 +93,9 @@ const PatientTable = (props: IPatientTable) => {
             </TableHead>
             <TableBody>
               {items.map((customer: any) => {
-                const createdAt = moment(customer.createdAt).format('MMMM Do, YYYY h:mm:ss A');
+                const createdAt = moment(customer.createdAt).format(
+                  "MMMM Do, YYYY h:mm:ss A",
+                );
                 return (
                   <TableRow hover key={customer.id}>
                     <TableCell>

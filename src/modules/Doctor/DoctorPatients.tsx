@@ -14,7 +14,7 @@ const DoctorPatients = () => {
 
   const customers = useMemo(
     () => applyPagination(patients, page, rowsPerPage),
-    [page, rowsPerPage, patients]
+    [page, rowsPerPage, patients],
   );
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const DoctorPatients = () => {
         console.error(
           `Failed to UserService.getPatientsByDoctorId: ${
             (error as Error)?.message
-          }`
+          }`,
         );
         toast.error(`Something went wrong:  ${(error as Error)?.message}`);
       }

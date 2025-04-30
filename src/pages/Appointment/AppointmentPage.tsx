@@ -38,14 +38,14 @@ const AppointmentPage = () => {
       )}
       {isDoctor && (
         <Container>
-        <Typography sx={{ my: 2 }} variant="h3">
-          Manage Appointments
-        </Typography>
-        <Typography color="text.secondary" variant="body2">
-          Streamlining Appointment Requests for Efficient Patient Care
-        </Typography>
-        <Calendar />
-      </Container>
+          <Typography sx={{ my: 2 }} variant="h3">
+            Manage Appointments
+          </Typography>
+          <Typography color="text.secondary" variant="body2">
+            Streamlining Appointment Requests for Efficient Patient Care
+          </Typography>
+          <Calendar />
+        </Container>
       )}
       {hasValidDoctorContract && (
         <Container>

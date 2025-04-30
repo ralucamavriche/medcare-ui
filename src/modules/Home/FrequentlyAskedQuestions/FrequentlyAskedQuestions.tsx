@@ -22,7 +22,8 @@ const questions = [
   },
   {
     id: 3,
-    question: "Are there any fees for using the appointment scheduling service?",
+    question:
+      "Are there any fees for using the appointment scheduling service?",
     answer:
       "Our appointment scheduling service is free to use. There are no hidden fees associated with booking appointments through our app.",
   },
@@ -52,13 +53,13 @@ const FrequentlyAskedQuestions = () => {
               key={id}
               sx={{
                 backgroundColor: "transparent",
-                boxShadow: 'none'
+                boxShadow: "none",
               }}
             >
               <AccordionSummary
                 sx={{
                   backgroundColor: "transparent",
-                  boxShadow: 'none'
+                  boxShadow: "none",
                 }}
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
@@ -69,7 +70,7 @@ const FrequentlyAskedQuestions = () => {
               <AccordionDetails
                 sx={{
                   backgroundColor: "transparent",
-                  boxShadow: 'none'
+                  boxShadow: "none",
                 }}
               >
                 <Typography variant="body2">{answer}</Typography>

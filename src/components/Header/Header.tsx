@@ -71,36 +71,43 @@ const RenderLogo = () => (
   </Box>
 );
 
-const LOGGEDIN_ROUTES = [{
-  to: '/dashboard',
-  label: 'Dashboard'
-}, {
-  to: '/dashboard/appointment',
-  label: 'Appointment'
-}, {
-  to: '/contact',
-  label: 'Contact'
-}, {
-  to: '/Details',
-  label: 'Details'
-}]
+const LOGGEDIN_ROUTES = [
+  {
+    to: "/dashboard",
+    label: "Dashboard",
+  },
+  {
+    to: "/dashboard/appointment",
+    label: "Appointment",
+  },
+  {
+    to: "/contact",
+    label: "Contact",
+  },
+  {
+    to: "/Details",
+    label: "Details",
+  },
+];
 
 const Header = () => {
-  const { user,removeUser } = useAuth()
+  const { user, removeUser } = useAuth();
   const [showDrawer, setShowDrawer] = useState(false);
   const lgDown = useMediaQuery((theme: Theme) => theme.breakpoints.down("lg"));
 
-  const isLoggedIn = !!user
+  const isLoggedIn = !!user;
 
   const generateLoggedInRoutes = () => {
     if (!isLoggedIn) {
-      return null
+      return null;
     }
 
-    return LOGGEDIN_ROUTES.map(({ to, label }) => (<Link to={to}>
-      <Button sx={{ color: "neutral.600" }}>{label}</Button>
-    </Link>))
-  }
+    return LOGGEDIN_ROUTES.map(({ to, label }) => (
+      <Link to={to}>
+        <Button sx={{ color: "neutral.600" }}>{label}</Button>
+      </Link>
+    ));
+  };
 
   return (
     <Box
@@ -171,7 +178,8 @@ const Header = () => {
                     >
                       Login
                     </Button>
-                  </Box>)}
+                  </Box>
+                )}
               </Stack>
             </Box>
           </>

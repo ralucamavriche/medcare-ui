@@ -1,1 +1,1 @@
-export { default } from './FeedbackSection'
+export { default } from "./FeedbackSection";

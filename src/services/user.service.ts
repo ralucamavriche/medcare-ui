@@ -37,13 +37,13 @@ export const getDoctorAccountsBasedOnStatus = async (status: string) => {
     console.error(error);
     return handleError(
       `Failed to retrieve the list of doctors in ${status} status!`,
-      error.code
+      error.code,
     );
   }
 };
 
 export const getPatientBasedOnRequestedStatus = async (
-  requestedStatus: string
+  requestedStatus: string,
 ) => {
   try {
     const response = await api.get(`/users/patients/${requestedStatus}`);
@@ -55,7 +55,7 @@ export const getPatientBasedOnRequestedStatus = async (
     console.error(error);
     return handleError(
       "Failed to retrieve the list of patients in SENT request state!",
-      error.code
+      error.code,
     );
   }
 };
@@ -63,7 +63,7 @@ export const getPatientBasedOnRequestedStatus = async (
 export const getPatientsByDoctorId = async (doctorId: string) => {
   try {
     const response = await api.get(
-      `/users/patients/getPatientsByDoctorId/${doctorId}`
+      `/users/patients/getPatientsByDoctorId/${doctorId}`,
     );
     if (response.status !== 200) {
       throw new Error(response.statusText);
@@ -73,7 +73,7 @@ export const getPatientsByDoctorId = async (doctorId: string) => {
     console.error(error);
     return handleError(
       "Failed to retrieve the list of patients by Doctor ID!",
-      error.code
+      error.code,
     );
   }
 };

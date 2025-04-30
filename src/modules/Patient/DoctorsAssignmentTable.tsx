@@ -20,7 +20,6 @@ import useAuth from "../../hooks/useAuth";
 import { REQUEST_STATUSES } from "../../constants/common.constants";
 import * as ReactRouter from "react-router-dom";
 
-
 interface IDoctorsAssignmentTable {
   count: number;
   items: Array<object>;
@@ -59,10 +58,10 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
       setIsDisabled(true);
     } catch (error) {
       console.error(
-        `Failed to sent the request to the doctor: ${(error as Error)?.message}`
+        `Failed to sent the request to the doctor: ${(error as Error)?.message}`,
       );
       toast.error(
-        `Failed to sent the request to the doctor: ${(error as Error)?.message}`
+        `Failed to sent the request to the doctor: ${(error as Error)?.message}`,
       );
     }
   };
@@ -90,7 +89,7 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
                   <TableRow hover key={customer.id}>
                     <TableCell>
                       <Stack alignItems="center" direction="row" spacing={2}>
-                      <Link
+                        <Link
                           component={ReactRouter.Link}
                           to={`/dashboard/user-account?id=${customer.id}`}
                           target="_blank"
@@ -119,7 +118,12 @@ const DoctorsAssignmentTable = (props: IDoctorsAssignmentTable) => {
                           <Button
                             variant="contained"
                             onClick={() => handleOnRequest(customer.id)}
-                            disabled={isDisable || isSent || user?.role === "ADMIN" || user?.requestedDoctorStatus === "ACCEPTED"}
+                            disabled={
+                              isDisable ||
+                              isSent ||
+                              user?.role === "ADMIN" ||
+                              user?.requestedDoctorStatus === "ACCEPTED"
+                            }
                           >
                             Send request
                           </Button>

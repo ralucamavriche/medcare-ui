@@ -1,12 +1,5 @@
 import { Helmet } from "react-helmet";
-import {
-  Box,
-  Typography,
-  Container,
-  Button,
-  Grid,
-  Stack,
-} from "@mui/material";
+import { Box, Typography, Container, Button, Grid, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import Image from "/assets/images/main.png";
@@ -95,11 +88,8 @@ const HomePage = () => {
                   matters.
                 </Typography>
                 <Box component={Link} to="/auth/login">
-                    <Button variant="contained"
-                    >
-                     Let's start!
-                    </Button>
-                  </Box>
+                  <Button variant="contained">Let's start!</Button>
+                </Box>
               </Grid>
             </Grid>
           </Container>

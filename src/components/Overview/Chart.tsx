@@ -8,8 +8,8 @@
 
 // export const Chart = styled(ApexChart)``;
 
-import React from 'react';
-import ReactApexChart from 'react-apexcharts';
+import React from "react";
+import ReactApexChart from "react-apexcharts";
 
 interface ChartProps {
   options: any;
@@ -19,7 +19,13 @@ interface ChartProps {
   height?: string | number;
 }
 
-const Chart: React.FC<ChartProps> = ({ options, series, type, width, height }) => {
+const Chart: React.FC<ChartProps> = ({
+  options,
+  series,
+  type,
+  width,
+  height,
+}) => {
   return (
     <ReactApexChart
       options={options}

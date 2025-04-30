@@ -58,7 +58,7 @@ export const register = async (
   email: string,
   password: string,
   medicalLicenseNumber: string,
-  role: string
+  role: string,
 ) => {
   try {
     const response = await api.post("/auth/register", {

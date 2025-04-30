@@ -21,7 +21,7 @@ const DashboardPage = () => {
       setTotalUsers(users.length);
     } catch (error) {
       console.error(
-        `Failed to userService.getUsers: ${(error as Error)?.message}`
+        `Failed to userService.getUsers: ${(error as Error)?.message}`,
       );
       toast.error(`Something went wrong:  ${(error as Error)?.message}`);
     }
@@ -35,7 +35,7 @@ const DashboardPage = () => {
       console.error(
         `Failed to userService.getAcceptedAndRejectedCounts: ${
           (error as Error)?.message
-        }`
+        }`,
       );
       toast.error(`Something went wrong:  ${(error as Error)?.message}`);
     }

@@ -13,7 +13,7 @@ interface IOverviewTotalRejectedAppointment {
 }
 
 export const OverviewTotalRejectedAppointment = (
-  props: IOverviewTotalRejectedAppointment
+  props: IOverviewTotalRejectedAppointment,
 ) => {
   const { value, sx } = props;
 

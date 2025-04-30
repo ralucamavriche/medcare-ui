@@ -26,7 +26,7 @@ interface NavbarProps {
 export const Navbar = (props: NavbarProps) => {
   const { onNavOpen } = props;
   const lgUp = useMediaQuery<Theme>((theme: Theme) =>
-    theme.breakpoints.up("lg")
+    theme.breakpoints.up("lg"),
   );
   const { removeUser, user } = useAuth();
 
@@ -84,13 +84,13 @@ export const Navbar = (props: NavbarProps) => {
                 <Link href="/dashboard/account">
                   {user?.role === "DOCTOR" ? (
                     <Avatar
-                    src="/assets/avatars/avatar-doctor.jpg"
-                    sx={{
-                      cursor: "pointer",
-                      height: 40,
-                      width: 40,
-                    }}
-                  />
+                      src="/assets/avatars/avatar-doctor.jpg"
+                      sx={{
+                        cursor: "pointer",
+                        height: 40,
+                        width: 40,
+                      }}
+                    />
                   ) : (
                     <Avatar
                       src="/assets/avatars/avatar-anika-visser.png"

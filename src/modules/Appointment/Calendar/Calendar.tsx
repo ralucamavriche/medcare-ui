@@ -42,7 +42,7 @@ const renderEventContent = ({
 const Calendar = forwardRef(
   (
     { initialEvents, handleOnDateSelect, handleOnEventClick }: CalendarProps,
-    ref: LegacyRef<FullCalendar> | undefined
+    ref: LegacyRef<FullCalendar> | undefined,
   ) => {
     const theme = useTheme();
     const shadowMedium = theme.shadows[5];
@@ -93,7 +93,7 @@ const Calendar = forwardRef(
         />
       </Paper>
     );
-  }
+  },
 );
 
 export default Calendar;

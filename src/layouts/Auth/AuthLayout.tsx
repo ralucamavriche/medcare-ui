@@ -5,87 +5,88 @@ import Logo from "../../components/Logo";
 import { ToastContainer } from "react-toastify";
 
 const AuthLayout = () => {
-
   return (
-    <><Box
-      component="main"
-      height={"100vh"}
-      sx={{
-        display: "flex",
-      }}
-    >
-      <Grid container sx={{ flex: "1 1 auto" }}>
-        <Grid
-          xs={12}
-          lg={6}
-          sx={{
-            backgroundColor: "background.paper",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Box
-            component="header"
+    <>
+      <Box
+        component="main"
+        height={"100vh"}
+        sx={{
+          display: "flex",
+        }}
+      >
+        <Grid container sx={{ flex: "1 1 auto" }}>
+          <Grid
+            xs={12}
+            lg={6}
             sx={{
-              left: 0,
-              p: 3,
-              position: "fixed",
-              top: 0,
-              width: "100%",
+              backgroundColor: "background.paper",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             <Box
-              component={Link}
-              to="/"
+              component="header"
               sx={{
-                display: "inline-flex",
-                height: 32,
-                width: 32,
+                left: 0,
+                p: 3,
+                position: "fixed",
+                top: 0,
+                width: "100%",
               }}
             >
-              <Logo />
-            </Box>
-          </Box>
-          <Outlet />
-        </Grid>
-        <Grid
-          xs={12}
-          lg={6}
-          sx={{
-            alignItems: "center",
-            background: "radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)",
-            color: "white",
-            display: "flex",
-            justifyContent: "center",
-            "& img": {
-              maxWidth: "100%",
-            },
-          }}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography
-              align="center"
-              color="inherit"
-              sx={{
-                fontSize: "24px",
-                lineHeight: "32px",
-                mb: 1,
-              }}
-              variant="h1"
-            >
-              Welcome to{" "}
-              <Box component="a" sx={{ color: "#15B79E" }} target="_blank">
-                MedCare
+              <Box
+                component={Link}
+                to="/"
+                sx={{
+                  display: "inline-flex",
+                  height: 32,
+                  width: 32,
+                }}
+              >
+                <Logo />
               </Box>
-            </Typography>
-            <Typography align="center" sx={{ mb: 3 }} variant="subtitle1">
-              Your family's health, just a click away.
-            </Typography>
-            <img alt="" src="/assets/auth.svg" />
-          </Box>
+            </Box>
+            <Outlet />
+          </Grid>
+          <Grid
+            xs={12}
+            lg={6}
+            sx={{
+              alignItems: "center",
+              background:
+                "radial-gradient(50% 50% at 50% 50%, #122647 0%, #090E23 100%)",
+              color: "white",
+              display: "flex",
+              justifyContent: "center",
+              "& img": {
+                maxWidth: "100%",
+              },
+            }}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography
+                align="center"
+                color="inherit"
+                sx={{
+                  fontSize: "24px",
+                  lineHeight: "32px",
+                  mb: 1,
+                }}
+                variant="h1"
+              >
+                Welcome to{" "}
+                <Box component="a" sx={{ color: "#15B79E" }} target="_blank">
+                  MedCare
+                </Box>
+              </Typography>
+              <Typography align="center" sx={{ mb: 3 }} variant="subtitle1">
+                Your family's health, just a click away.
+              </Typography>
+              <img alt="" src="/assets/auth.svg" />
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
       <ToastContainer />
     </>
   );

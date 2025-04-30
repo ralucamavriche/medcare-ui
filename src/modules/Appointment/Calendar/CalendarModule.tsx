@@ -88,7 +88,7 @@ const CalendarModule = () => {
           appointments =
             await AppointmentService.getAppointmentsByDoctorIdAndUserId(
               doctorId,
-              id
+              id,
             );
         }
 
@@ -103,7 +103,7 @@ const CalendarModule = () => {
             userId: userId.id,
             userName: `${userId.firstName} ${userId.lastName}`,
             ...BACKGROUND_COLOR_BASED_ON_STATUS[status as REQUEST_STATUSES],
-          })
+          }),
         );
 
         setEvents(formattedAppointments);
@@ -112,7 +112,7 @@ const CalendarModule = () => {
         console.error(
           `Failed to fetch appointments in calendarModule: ${
             (error as Error)?.message
-          }`
+          }`,
         );
         toast.error(`Something went wrong:  ${(error as Error)?.message}`);
       } finally {
@@ -121,7 +121,7 @@ const CalendarModule = () => {
     };
 
     userId && fetchAppointments(userId, isDoctor);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, isDoctor]);
 
   const handleOnCreateEvent = async (event: EventInput) => {
@@ -159,17 +159,17 @@ const CalendarModule = () => {
       console.error(
         `Failed to AppointmentService.createAppointment: ${
           (error as Error)?.message
-        }`
+        }`,
       );
       toast.error(
-        `Failed to create the appointment! ${(error as Error)?.message}`
+        `Failed to create the appointment! ${(error as Error)?.message}`,
       );
     }
   };
 
   const handleOnUpdateEvent = async (
     eventImpl: EventImpl,
-    eventInput: EventInput
+    eventInput: EventInput,
   ) => {
     const { id } = eventImpl;
     const { title, start, end, description } = eventInput;
@@ -196,17 +196,17 @@ const CalendarModule = () => {
       eventImpl.setEnd(end!);
       eventImpl.setProp(
         "backgroundColor",
-        BACKGROUND_COLOR_BASED_ON_STATUS[status]
+        BACKGROUND_COLOR_BASED_ON_STATUS[status],
       );
 
       setShowEventModal(false);
       toast.success("Appointment Successfully updated!");
     } catch (error) {
       console.error(
-        `Failed to update the appointment: ${(error as Error)?.message}`
+        `Failed to update the appointment: ${(error as Error)?.message}`,
       );
       toast.error(
-        `Failed to update the appointment: ${(error as Error)?.message}`
+        `Failed to update the appointment: ${(error as Error)?.message}`,
       );
     } finally {
     }
@@ -228,10 +228,10 @@ const CalendarModule = () => {
       toast.success("Appointment Successfully deleted!");
     } catch (error) {
       console.error(
-        `Failed to delete the appointment: ${(error as Error)?.message}`
+        `Failed to delete the appointment: ${(error as Error)?.message}`,
       );
       toast.error(
-        `Failed to delete the appointment: ${(error as Error)?.message}`
+        `Failed to delete the appointment: ${(error as Error)?.message}`,
       );
     }
   };
@@ -282,7 +282,7 @@ const CalendarModule = () => {
 
   const handleOnManage = async (
     eventImpl: EventImpl,
-    status: REQUEST_STATUSES
+    status: REQUEST_STATUSES,
   ) => {
     const { id } = eventImpl;
 
@@ -309,14 +309,14 @@ const CalendarModule = () => {
       toast.success(
         `Appointment Successfully ${
           status === REQUEST_STATUSES.ACCEPTED ? "Accepted" : "Rejected"
-        }!`
+        }!`,
       );
     } catch (error) {
       console.error(
-        `Failed to manage the appointment: ${(error as Error)?.message}`
+        `Failed to manage the appointment: ${(error as Error)?.message}`,
       );
       toast.error(
-        `Failed to manage the appointment: ${(error as Error)?.message}`
+        `Failed to manage the appointment: ${(error as Error)?.message}`,
       );
     }
   };
