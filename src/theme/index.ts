@@ -47,7 +47,7 @@ export function createTheme() {
       string,
       string,
       string,
-      string
+      string,
     ],
     shape: {
       borderRadius: 8,

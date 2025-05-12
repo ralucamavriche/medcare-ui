@@ -1,8 +1,4 @@
-import {
-  ArrowUpward,
-  ArrowDownward,
-  CheckCircle,
-} from "@mui/icons-material";
+import { ArrowUpward, ArrowDownward, CheckCircle } from "@mui/icons-material";
 
 import {
   Avatar,
@@ -21,7 +17,7 @@ interface ITotalAcceptedAppointmentOverview {
 }
 
 export const TotalAcceptedAppointmentOverview = (
-  props: ITotalAcceptedAppointmentOverview
+  props: ITotalAcceptedAppointmentOverview,
 ) => {
   const { difference, positive = false, sx, value } = props;
 

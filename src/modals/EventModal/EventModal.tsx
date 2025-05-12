@@ -95,7 +95,7 @@ const EventModal = ({
         console.log(values);
       } catch (error) {
         toast.error(
-          `Error occured while submiting the form: ${(error as Error)?.message}`
+          `Error occured while submiting the form: ${(error as Error)?.message}`,
         );
       }
     },
@@ -189,8 +189,8 @@ const EventModal = ({
               {isAddMode
                 ? "Add Event"
                 : isEditMode
-                ? "Edit Event"
-                : "Manage Event"}
+                  ? "Edit Event"
+                  : "Manage Event"}
             </Typography>
             <Stack spacing={2}>
               {isManageMode && (
@@ -251,7 +251,7 @@ const EventModal = ({
                     if (value && formik.values.end) {
                       const isValidRange = isValidDuration(
                         value,
-                        formik.values.end
+                        formik.values.end,
                       );
                       if (!isValidRange) {
                         setDateErrors({
@@ -290,7 +290,7 @@ const EventModal = ({
                     if (value && formik.values.start) {
                       const isValidRange = isValidDuration(
                         formik.values.start,
-                        value
+                        value,
                       );
                       if (!isValidRange) {
                         setDateErrors({
@@ -375,7 +375,7 @@ const EventModal = ({
                       onClick={() =>
                         handleOnManage(
                           event.eventImpl,
-                          REQUEST_STATUSES.REJECTED
+                          REQUEST_STATUSES.REJECTED,
                         )
                       }
                     >
@@ -391,7 +391,7 @@ const EventModal = ({
                       onClick={() =>
                         handleOnManage(
                           event.eventImpl,
-                          REQUEST_STATUSES.ACCEPTED
+                          REQUEST_STATUSES.ACCEPTED,
                         )
                       }
                     >

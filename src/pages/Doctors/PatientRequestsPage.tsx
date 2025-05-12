@@ -25,14 +25,14 @@ const PatientRequestsPage = () => {
     const fetchPatients = async () => {
       try {
         const patients = await UserService.getPatientBasedOnRequestedStatus(
-          REQUEST_STATUSES.SENT
+          REQUEST_STATUSES.SENT,
         );
         setPatients(patients);
       } catch (error) {
         console.error(
           `Failed to UserService.getPatientBasedOnRequestedStatus: ${
             (error as Error)?.message
-          }`
+          }`,
         );
         toast.error(`Something went wrong:  ${(error as Error)?.message}`);
       }
@@ -60,7 +60,7 @@ const PatientRequestsPage = () => {
       });
 
       const patients = await UserService.getPatientBasedOnRequestedStatus(
-        REQUEST_STATUSES.SENT
+        REQUEST_STATUSES.SENT,
       );
       setPatients(patients);
       toast.success("Patient Request Successfully Accepted!");
@@ -68,12 +68,12 @@ const PatientRequestsPage = () => {
       console.error(
         `Failed to update the status of the request: ${
           (error as Error)?.message
-        }`
+        }`,
       );
       toast.error(
         `Failed to update the status of the request: ${
           (error as Error)?.message
-        }`
+        }`,
       );
     }
   };
@@ -88,7 +88,7 @@ const PatientRequestsPage = () => {
         requestedDoctorStatus: REQUEST_STATUSES.REJECTED,
       });
       const patients = await UserService.getPatientBasedOnRequestedStatus(
-        REQUEST_STATUSES.SENT
+        REQUEST_STATUSES.SENT,
       );
       setPatients(patients);
       toast.success("Patient Request Successfully Rejected!");
@@ -96,12 +96,12 @@ const PatientRequestsPage = () => {
       console.error(
         `Failed to update the status of the request: ${
           (error as Error)?.message
-        }`
+        }`,
       );
       toast.error(
         `Failed to update the status of the request: ${
           (error as Error)?.message
-        }`
+        }`,
       );
     }
   };

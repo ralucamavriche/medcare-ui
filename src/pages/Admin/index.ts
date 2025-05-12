@@ -1,1 +1,1 @@
-export * as DoctorRequestsPage from '../Admin/DoctorRequestsPage'
+export * as DoctorRequestsPage from "../Admin/DoctorRequestsPage";

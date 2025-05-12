@@ -1,2 +1,2 @@
-export * as PatientRequestsPage from './PatientRequestsPage'
-export * as MyPatientsPage from './MyPatientsPage'
+export * as PatientRequestsPage from "./PatientRequestsPage";
+export * as MyPatientsPage from "./MyPatientsPage";

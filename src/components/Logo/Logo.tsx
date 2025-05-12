@@ -1,4 +1,4 @@
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
 
 const Logo = () => {
   const theme = useTheme();
@@ -24,4 +24,4 @@ const Logo = () => {
     </svg>
   );
 };
-export default Logo
+export default Logo;

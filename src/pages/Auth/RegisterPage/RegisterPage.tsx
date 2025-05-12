@@ -63,10 +63,12 @@ const RegisterPage = () => {
           email,
           password,
           medicalLicenseNumber,
-          role
+          role,
         );
         if (!user) {
-          throw new Error('Failed to register. The data are incorrect. Password must be at least 8 characters!')
+          throw new Error(
+            "Failed to register. The data are incorrect. Password must be at least 8 characters!",
+          );
         }
         addUser(user);
         navigate("/dashboard");
@@ -92,7 +94,7 @@ const RegisterPage = () => {
       formik.setFieldValue("isDoctor", value === "doctor");
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   return (

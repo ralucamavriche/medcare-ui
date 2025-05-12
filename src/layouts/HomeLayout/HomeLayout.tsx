@@ -3,11 +3,11 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 
 const HomeLayout = () => (
-    <>
-        <Header />
-        <Outlet />
-        <Footer />
-    </>
+  <>
+    <Header />
+    <Outlet />
+    <Footer />
+  </>
 );
 
-export default HomeLayout
+export default HomeLayout;

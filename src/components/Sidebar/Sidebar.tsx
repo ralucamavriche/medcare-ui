@@ -33,7 +33,7 @@ const Sidebar = (props: SidebarProps) => {
   const pathname = location.pathname;
 
   const lgUp = useMediaQuery<Theme>((theme: Theme) =>
-    theme.breakpoints.up("lg")
+    theme.breakpoints.up("lg"),
   );
 
   const content = (

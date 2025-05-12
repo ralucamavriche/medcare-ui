@@ -14,15 +14,14 @@ const DoctorsAssignment = () => {
     const fetchDoctors = async () => {
       try {
         const status = REQUEST_STATUSES.ACCEPTED;
-        const doctors = await UserService.getDoctorAccountsBasedOnStatus(
-          status
-        );
+        const doctors =
+          await UserService.getDoctorAccountsBasedOnStatus(status);
         setDoctors(doctors);
       } catch (error) {
         console.error(
           `Failed to UserService.getDoctorAccountsBasedOnStatus: ${
             (error as Error)?.message
-          }`
+          }`,
         );
         toast.error(`Something went wrong:  ${(error as Error)?.message}`);
       }

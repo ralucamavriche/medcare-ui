@@ -34,7 +34,7 @@ const UserAccountPage = () => {
         setUser(user);
       } catch (error) {
         console.error(
-          `Failed to get user account details${(error as Error)?.message}`
+          `Failed to get user account details${(error as Error)?.message}`,
         );
         toast.error(`${(error as Error)?.message}`);
       } finally {

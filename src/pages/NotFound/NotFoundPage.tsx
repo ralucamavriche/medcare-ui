@@ -1,18 +1,16 @@
-import { Link as RouterLink } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Link as RouterLink } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import { Box, Button, Container, Typography } from "@mui/material";
 
 const NotFoundPage = () => (
   <>
     <Helmet>
-      <title>
-        Error: Not Found
-      </title>
+      <title>Error: Not Found</title>
     </Helmet>
     <Box
       sx={{
-        backgroundColor: 'background.paper',
-        flexGrow: 1
+        backgroundColor: "background.paper",
+        flexGrow: 1,
       }}
     >
       <Container
@@ -20,39 +18,27 @@ const NotFoundPage = () => (
         sx={{
           px: 5,
           py: 14,
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'column'
+          alignItems: "center",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <Box
           sx={{
-            '& img': {
-              maxWidth: '100%'
-            }
+            "& img": {
+              maxWidth: "100%",
+            },
           }}
         >
           <img src="/assets/errors/error-404.svg" alt="error" />
         </Box>
-        <Typography
-          align="center"
-          sx={{ my: 2 }}
-          variant="h3"
-        >
+        <Typography align="center" sx={{ my: 2 }} variant="h3">
           Nothing here!
         </Typography>
-        <Typography
-          align="center"
-          color="text.secondary"
-          variant="body2"
-        >
+        <Typography align="center" color="text.secondary" variant="body2">
           The page requested does not exist.
         </Typography>
-        <Button
-          to="/"
-          component={RouterLink}
-          sx={{ mt: 2 }}
-        >
+        <Button to="/" component={RouterLink} sx={{ mt: 2 }}>
           Take me home
         </Button>
       </Container>

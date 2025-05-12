@@ -43,15 +43,19 @@ const FeedbackSection = (props: FeedbackSectionProps) => {
         <Box
           component={"div"}
           sx={{
-            textAlign: "left"
+            textAlign: "left",
           }}
         >
           {renderStarRating()}
         </Box>
-        <Typography align="left" variant="body1" sx={{
-          my: 2,
-          color: "neutral.700"
-        }}>
+        <Typography
+          align="left"
+          variant="body1"
+          sx={{
+            my: 2,
+            color: "neutral.700",
+          }}
+        >
           {feedback.description}
         </Typography>
         <Divider />

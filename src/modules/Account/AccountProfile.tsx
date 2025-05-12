@@ -11,13 +11,13 @@ import { IUser } from "../../types/dto/user";
 import moment from "moment";
 
 interface IAccountProfile {
-  userDetails: IUser | null
+  userDetails: IUser | null;
 }
 
 const AccountProfile = (props: IAccountProfile) => {
-  const { userDetails } = props
-  const { firstName, country, city, role } = userDetails || {}
-  const [time, setTime] = useState(new Date().toISOString())
+  const { userDetails } = props;
+  const { firstName, country, city, role } = userDetails || {};
+  const [time, setTime] = useState(new Date().toISOString());
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -26,7 +26,7 @@ const AccountProfile = (props: IAccountProfile) => {
 
     return () => clearInterval(interval);
   }, []);
-  const formatTime = moment(time).format('MMMM Do, YYYY h:mm:ss A');
+  const formatTime = moment(time).format("MMMM Do, YYYY h:mm:ss A");
 
   return (
     <>
@@ -40,7 +40,7 @@ const AccountProfile = (props: IAccountProfile) => {
             }}
           >
             {role === "DOCTOR" ? (
-                <Avatar
+              <Avatar
                 src="/assets/avatars/avatar-doctor.jpg"
                 sx={{
                   height: 80,
@@ -48,8 +48,8 @@ const AccountProfile = (props: IAccountProfile) => {
                   width: 80,
                 }}
               />
-              ) : (
-                <Avatar
+            ) : (
+              <Avatar
                 src="/assets/avatars/avatar-anika-visser.png"
                 sx={{
                   height: 80,
@@ -57,7 +57,7 @@ const AccountProfile = (props: IAccountProfile) => {
                   width: 80,
                 }}
               />
-              )}
+            )}
             <Typography gutterBottom variant="h5">
               {firstName}
             </Typography>

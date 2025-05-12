@@ -22,7 +22,7 @@ export const getAppointments = async (): Promise<Appointment[]> => {
 };
 
 export const getAppointmentsByStatus = async (
-  status: string
+  status: string,
 ): Promise<Appointment[]> => {
   const response = await api.get("/appointment/status", {
     params: { status },
@@ -36,10 +36,10 @@ export const getAppointmentsByStatus = async (
 export const getAcceptedAndRejectedCounts = async () => {
   try {
     const acceptedAppointments = await getAppointmentsByStatus(
-      REQUEST_STATUSES.ACCEPTED
+      REQUEST_STATUSES.ACCEPTED,
     );
     const rejectedAppointments = await getAppointmentsByStatus(
-      REQUEST_STATUSES.REJECTED
+      REQUEST_STATUSES.REJECTED,
     );
     return {
       acceptedCount: acceptedAppointments.length,
@@ -61,10 +61,10 @@ export const getAppointmentById = async (id: string): Promise<Appointment> => {
 
 export const getAppointmentsByDoctorIdAndUserId = async (
   doctorId?: string,
-  userId?: string
+  userId?: string,
 ): Promise<Appointment[]> => {
   const response = await api.get(
-    `/appointment/doctor2/${doctorId}/appointments/${userId}`
+    `/appointment/doctor2/${doctorId}/appointments/${userId}`,
   );
   if (response.status !== 200) {
     throw new Error(response.statusText);
@@ -73,7 +73,7 @@ export const getAppointmentsByDoctorIdAndUserId = async (
 };
 
 export const getAppointmentsByUserId = async (
-  userId: string
+  userId: string,
 ): Promise<Appointment[]> => {
   const response = await api.get(`/appointment/user/${userId}/appointments`);
   if (response.status !== 200) {
@@ -83,10 +83,10 @@ export const getAppointmentsByUserId = async (
 };
 
 export const getAppointmentsByDoctorId = async (
-  doctorId: string
+  doctorId: string,
 ): Promise<Appointment[]> => {
   const response = await api.get(
-    `/appointment/doctor/${doctorId}/appointments`
+    `/appointment/doctor/${doctorId}/appointments`,
   );
   if (response.status !== 200) {
     throw new Error(response.statusText);
@@ -95,7 +95,7 @@ export const getAppointmentsByDoctorId = async (
 };
 
 export const createAppointment = async (
-  payload: RequestAppointment
+  payload: RequestAppointment,
 ): Promise<Appointment> => {
   const response = await api.post(`/appointment`, payload);
   if (response.status !== 201) {
@@ -107,7 +107,7 @@ export const createAppointment = async (
 
 export const updateAppointment = async (
   id: string,
-  payload: RequestAppointment
+  payload: RequestAppointment,
 ): Promise<Appointment> => {
   const response = await api.patch(`/appointment/${id}`, payload);
 

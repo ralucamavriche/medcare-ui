@@ -1,22 +1,15 @@
-import {
-  Box,
-  Button,
-  Link,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Link, Stack, TextField, Typography } from "@mui/material";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import * as ReactRouter from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { AuthService } from '../../../services'
+import { AuthService } from "../../../services";
 import useAuth from "../../../hooks/useAuth";
 import { toast } from "react-toastify";
 
 const LoginPage = () => {
-  const { addUser } = useAuth()
+  const { addUser } = useAuth();
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -34,13 +27,15 @@ const LoginPage = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        const { email, password } = values
+        const { email, password } = values;
 
-        const user = await AuthService.login(email, password)
+        const user = await AuthService.login(email, password);
         if (!user) {
-          throw new Error('Failed to login. The email or password is incorrect!')
+          throw new Error(
+            "Failed to login. The email or password is incorrect!",
+          );
         }
-        addUser(user)
+        addUser(user);
         navigate("/dashboard");
       } catch (err) {
         if (err instanceof Error) {
@@ -75,7 +70,7 @@ const LoginPage = () => {
         <Box
           sx={{
             maxWidth: 550,
-            height: '600px',
+            height: "600px",
             px: 3,
             width: "100%",
           }}

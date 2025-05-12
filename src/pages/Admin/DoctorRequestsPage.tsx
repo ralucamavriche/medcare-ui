@@ -14,7 +14,7 @@ const DoctorRequestsPage = () => {
         return applyPagination(doctors, page, rowsPerPage);
       },
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [page, rowsPerPage, doctors]
+      [page, rowsPerPage, doctors],
     );
   };
 
@@ -27,15 +27,14 @@ const DoctorRequestsPage = () => {
     const fetchDoctors = async () => {
       try {
         const status = REQUEST_STATUSES.PENDING;
-        const doctors = await UserService.getDoctorAccountsBasedOnStatus(
-          status
-        );
+        const doctors =
+          await UserService.getDoctorAccountsBasedOnStatus(status);
         setDoctors(doctors);
       } catch (error) {
         console.error(
           `Failed to userService.getDoctorAccountsBasedOnStatus: ${
             (error as Error)?.message
-          }`
+          }`,
         );
         toast.error(`Something went wrong:  ${(error as Error)?.message}`);
       }
@@ -57,18 +56,20 @@ const DoctorRequestsPage = () => {
       if (!userId) {
         throw new Error("Doctor ID not found!");
       }
-  
+
       await UserService.updateUser(userId, {
         status: REQUEST_STATUSES.ACCEPTED,
       });
 
-        const doctors = await UserService.getDoctorAccountsBasedOnStatus(
-          REQUEST_STATUSES.PENDING
-        );
-        setDoctors(doctors);
+      const doctors = await UserService.getDoctorAccountsBasedOnStatus(
+        REQUEST_STATUSES.PENDING,
+      );
+      setDoctors(doctors);
       toast.success("Doctor request successfully accepted!");
     } catch (error) {
-      console.error(`Failed to accept the request: ${(error as Error)?.message}`);
+      console.error(
+        `Failed to accept the request: ${(error as Error)?.message}`,
+      );
       toast.error(`Failed to accept the request: ${(error as Error)?.message}`);
     }
   };
@@ -78,13 +79,15 @@ const DoctorRequestsPage = () => {
       if (!userId) {
         throw new Error("Doctor ID not found!");
       }
-  
+
       await UserService.updateUser(userId, {
         status: REQUEST_STATUSES.REJECTED,
       });
       toast.success("Doctor request successfully rejected!");
     } catch (error) {
-      console.error(`Failed to reject the request: ${(error as Error)?.message}`);
+      console.error(
+        `Failed to reject the request: ${(error as Error)?.message}`,
+      );
       toast.error(`Failed to reject the request: ${(error as Error)?.message}`);
     }
   };
