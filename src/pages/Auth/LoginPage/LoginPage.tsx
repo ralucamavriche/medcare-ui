@@ -14,8 +14,8 @@ const LoginPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "doctor4@yahoo.com",
-      password: "Password23.23", //Password23.23 for doctor, Password123! for devias
+      email: "doctor@yahoo.com",
+      password: "parola123", //Password23.23 for doctor, Password123! for devias
       submit: null,
     },
     validationSchema: Yup.object({
