@@ -20,6 +20,7 @@ import DashboardLayout from "./layouts/Dashboard/DashboardLayout";
 import Unauthorized from "./pages/Unauthorized";
 import HomeLayout from "./layouts/HomeLayout/HomeLayout";
 import UserAccountPage from "./pages/Account/UserAccountPage";
+import PostsPage from "./pages/Posts";
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -77,6 +78,7 @@ const App = () => {
               />
               <Route path="my-patients" element={<MyPatientsPage />} />
               <Route path="user-account" element={<UserAccountPage />} />
+              <Route path="posts" element={<PostsPage />} />
             </Route>
             <Route path="/auth" element={<AuthLayout />}>
               <Route path="login" element={<LoginPage />} />

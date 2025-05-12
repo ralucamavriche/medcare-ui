@@ -1,4 +1,4 @@
-import { Person, Home, Create } from "@mui/icons-material";
+import { Person, Home, Create, PostAdd } from "@mui/icons-material";
 import { SvgIcon } from "@mui/material";
 import { RESOURCES } from "../../permissions";
 
@@ -10,6 +10,7 @@ export const LOGIN_PAGE = "/auth/login";
 export const enabledRoutes = [
   BASE_PATH,
   `${BASE_PATH}/`,
+  `${BASE_PATH}/posts`,
   `${BASE_PATH}/${RESOURCES.APPOINTEMNT}`,
   `${BASE_PATH}/${RESOURCES.ACCOUNT}`,
   `${BASE_PATH}/${RESOURCES.DOCTORS_REQUESTS}`,
@@ -108,6 +109,18 @@ export const dashboardItems = [
       </SvgIcon>
     ),
     resource: RESOURCES.MY_PATIENTS,
+    disabled: false,
+    external: false,
+  },
+  {
+    title: "Posts",
+    path: `${BASE_PATH}/posts`,
+    icon: (
+      <SvgIcon fontSize="small">
+        <PostAdd />
+      </SvgIcon>
+    ),
+    resource: RESOURCES.DASHBOARD,
     disabled: false,
     external: false,
   },
