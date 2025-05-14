@@ -1,8 +1,19 @@
 import { Alert, CircularProgress, Container } from "@mui/material";
 import usePosts from "../../hooks/usePosts";
+import PostsTable from "./PostsTable";
 
 const Posts = () => {
-  const { posts, isLoading, error } = usePosts();
+  const {
+    posts,
+    isLoading,
+    error,
+    page,
+    setPage,
+    patchUpdatePost,
+    deletePost,
+  } = usePosts({
+    limit: 5,
+  });
   if (isLoading) {
     return <CircularProgress />;
   }
@@ -13,8 +24,13 @@ const Posts = () => {
 
   return (
     <Container sx={{ marginTop: "10px" }} disableGutters>
-      Posts Module
-      {JSON.stringify(posts)}
+      <PostsTable
+        posts={posts}
+        page={page}
+        setPage={setPage}
+        patchUpdatePost={patchUpdatePost}
+        deletePost={deletePost}
+      />
     </Container>
   );
 };
