@@ -13,7 +13,8 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { ChangeEvent, useState } from "react";
-import PostsModal from "../../modals/PostsModal";
+import PostsUpdateModal from "../../modals/PostsModal/PostsUpdateModal";
+import { PostsDeleteModal } from "../../modals/PostsModal";
 
 export interface Post {
   userId: number;
@@ -22,7 +23,10 @@ export interface Post {
   body: string;
 }
 
+type ModalType = "update" | "delete" | null;
+
 type Nullable<T> = T | null | undefined;
+
 type PostListProps = {
   posts: Nullable<Post[]>;
   page: number;
@@ -40,7 +44,16 @@ const PostsTable = ({
 }: PostListProps) => {
   const [open, setOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<null | Post>(null);
-  const handleClose = () => setOpen(false);
+  const [modalType, setModalType] = useState<ModalType>(null);
+
+  const openModal = (type: ModalType) => {
+    setModalType(type);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setModalType(null);
+  };
 
   const handleChange = (_event: ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -52,12 +65,11 @@ const PostsTable = ({
     await patchUpdatePost(newPost.title, newPost.id);
   };
 
-  const handleDelete = async (postId: number) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this post?",
-    );
-    if (confirmed) {
+  const handleOnDelete = async (postId: number) => {
+    if (postId !== null) {
+      setOpen(false);
       await deletePost(postId);
+      setSelectedPost(null);
     }
   };
 
@@ -98,6 +110,7 @@ const PostsTable = ({
                         color="primary"
                         onClick={() => {
                           setSelectedPost(post);
+                          openModal("update");
                           setOpen(true);
                         }}
                       >
@@ -108,7 +121,9 @@ const PostsTable = ({
                       <IconButton
                         color="error"
                         onClick={() => {
-                          handleDelete(post.id);
+                          setSelectedPost(post);
+                          openModal("delete");
+                          setOpen(true);
                         }}
                       >
                         <DeleteIcon />
@@ -127,12 +142,23 @@ const PostsTable = ({
         page={page}
         onChange={handleChange}
       />
-      <PostsModal
-        open={open}
-        handleClose={handleClose}
-        selectedPost={selectedPost}
-        onSubmit={handleOnSubmit}
-      />
+      {modalType === "update" && (
+        <PostsUpdateModal
+          open={open}
+          handleClose={handleClose}
+          selectedPost={selectedPost}
+          onSubmit={handleOnSubmit}
+        />
+      )}
+
+      {modalType === "delete" && (
+        <PostsDeleteModal
+          open={open}
+          handleClose={handleClose}
+          postId={selectedPost?.id!}
+          onDelete={handleOnDelete}
+        />
+      )}
     </>
   );
 };

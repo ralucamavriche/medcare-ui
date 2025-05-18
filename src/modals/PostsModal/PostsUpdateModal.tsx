@@ -14,19 +14,19 @@ const style = {
   p: 4,
 };
 
-interface PropsPostsModal {
+interface PropsPostsUpdateModal {
   open: boolean;
   handleClose: () => void;
   selectedPost: null | Post;
   onSubmit: (newPost: Post) => void;
 }
 
-const PostsModal = ({
+const PostsUpdateModal = ({
   open,
   handleClose,
   selectedPost,
   onSubmit,
-}: PropsPostsModal) => {
+}: PropsPostsUpdateModal) => {
   const [title, setTitle] = useState(selectedPost?.title ?? "");
 
   useEffect(() => {
@@ -62,4 +62,4 @@ const PostsModal = ({
   );
 };
 
-export default PostsModal;
+export default PostsUpdateModal;
