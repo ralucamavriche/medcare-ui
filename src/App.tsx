@@ -21,6 +21,7 @@ import Unauthorized from "./pages/Unauthorized";
 import HomeLayout from "./layouts/HomeLayout/HomeLayout";
 import UserAccountPage from "./pages/Account/UserAccountPage";
 import PostsPage from "./pages/Posts";
+import { NotificationProvider } from "./context/NotificationProvider";
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -59,34 +60,39 @@ const App = () => {
             setIsAuthenticated,
           }}
         >
-          <Routes>
-            <Route path="/" element={<HomeLayout />}>
-              <Route index element={<HomePage />} />
-            </Route>
-            <Route path="/dashboard" element={<DashboardLayout />}>
-              <Route index element={<DashboardPage />} />
-              <Route path="appointment" element={<AppointmentPage />} />
-              <Route path="account" element={<AccountPage />} />
-              <Route
-                path="doctors-requests"
-                element={<DoctorValidationPage />}
-              />
-              <Route path="available-doctors" element={<AvailableDoctors />} />
-              <Route
-                path="patient-requests"
-                element={<PatientRequestsForDoctorPage />}
-              />
-              <Route path="my-patients" element={<MyPatientsPage />} />
-              <Route path="user-account" element={<UserAccountPage />} />
-              <Route path="posts" element={<PostsPage />} />
-            </Route>
-            <Route path="/auth" element={<AuthLayout />}>
-              <Route path="login" element={<LoginPage />} />
-              <Route path="register" element={<RegisterPage />} />
-            </Route>
-            <Route path="/unauthorized" element={<Unauthorized />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+          <NotificationProvider>
+            <Routes>
+              <Route path="/" element={<HomeLayout />}>
+                <Route index element={<HomePage />} />
+              </Route>
+              <Route path="/dashboard" element={<DashboardLayout />}>
+                <Route index element={<DashboardPage />} />
+                <Route path="appointment" element={<AppointmentPage />} />
+                <Route path="account" element={<AccountPage />} />
+                <Route
+                  path="doctors-requests"
+                  element={<DoctorValidationPage />}
+                />
+                <Route
+                  path="available-doctors"
+                  element={<AvailableDoctors />}
+                />
+                <Route
+                  path="patient-requests"
+                  element={<PatientRequestsForDoctorPage />}
+                />
+                <Route path="my-patients" element={<MyPatientsPage />} />
+                <Route path="user-account" element={<UserAccountPage />} />
+                <Route path="posts" element={<PostsPage />} />
+              </Route>
+              <Route path="/auth" element={<AuthLayout />}>
+                <Route path="login" element={<LoginPage />} />
+                <Route path="register" element={<RegisterPage />} />
+              </Route>
+              <Route path="/unauthorized" element={<Unauthorized />} />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </NotificationProvider>
         </AuthContext.Provider>
       </BrowserRouter>
     </>

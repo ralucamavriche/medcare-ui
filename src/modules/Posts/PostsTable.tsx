@@ -13,8 +13,9 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { ChangeEvent, useState } from "react";
-import PostsUpdateModal from "../../modals/PostsModal/PostsUpdateModal";
-import { PostsDeleteModal } from "../../modals/PostsModal";
+import { PostsDeleteModal, PostsUpdateModal } from "../../modals/PostsModal";
+import NotificationAlert from "../../components/Notification/NotificationAlert";
+import { useNotification } from "../../context/NotificationProvider";
 
 export interface Post {
   userId: number;
@@ -45,6 +46,12 @@ const PostsTable = ({
   const [open, setOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState<null | Post>(null);
   const [modalType, setModalType] = useState<ModalType>(null);
+  const [alert, setAlert] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+
+  const { increment } = useNotification();
 
   const openModal = (type: ModalType) => {
     setModalType(type);
@@ -60,16 +67,36 @@ const PostsTable = ({
   };
 
   const handleOnSubmit = async (newPost: Post) => {
-    setOpen(false);
-    setSelectedPost(null);
-    await patchUpdatePost(newPost.title, newPost.id);
+    try {
+      setOpen(false);
+      setSelectedPost(null);
+      await patchUpdatePost(newPost.title, newPost.id);
+      setAlert({
+        type: "success",
+        message: `Update successfully the post id ${newPost.id}.`,
+      });
+    } catch (error) {
+      setAlert({
+        type: "error",
+        message: "Failed to update post.",
+      });
+    }
   };
 
   const handleOnDelete = async (postId: number) => {
-    if (postId !== null) {
+    try {
       setOpen(false);
       await deletePost(postId);
       setSelectedPost(null);
+      setAlert({
+        type: "success",
+        message: `Deleted successfully the post id ${postId}.`,
+      });
+    } catch (error) {
+      setAlert({
+        type: "error",
+        message: "Failed to delete post.",
+      });
     }
   };
 
@@ -157,6 +184,17 @@ const PostsTable = ({
           handleClose={handleClose}
           postId={selectedPost?.id!}
           onDelete={handleOnDelete}
+        />
+      )}
+
+      {alert && (
+        <NotificationAlert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => {
+            increment();
+            setAlert(null);
+          }}
         />
       )}
     </>

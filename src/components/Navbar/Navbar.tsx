@@ -15,6 +15,7 @@ import {
 import { alpha } from "@mui/material/styles";
 import useAuth from "../../hooks/useAuth";
 import { capitalize } from "../../utils/string";
+import { useNotification } from "../../context/NotificationProvider";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -24,6 +25,7 @@ interface NavbarProps {
 }
 
 export const Navbar = (props: NavbarProps) => {
+  const { postNotifications, clear } = useNotification();
   const { onNavOpen } = props;
   const lgUp = useMediaQuery<Theme>((theme: Theme) =>
     theme.breakpoints.up("lg"),
@@ -72,7 +74,11 @@ export const Navbar = (props: NavbarProps) => {
           <Stack alignItems="center" direction="row" spacing={2}>
             <Tooltip title="Notifications">
               <IconButton>
-                <Badge badgeContent={0} color="primary">
+                <Badge
+                  badgeContent={postNotifications}
+                  color="primary"
+                  onClick={clear}
+                >
                   <SvgIcon fontSize="small">
                     <Notifications />
                   </SvgIcon>

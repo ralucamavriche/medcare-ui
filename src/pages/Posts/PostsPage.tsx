@@ -14,7 +14,7 @@ const PostsPage = () => {
           Posts
         </Typography>
         <Typography color="text.secondary" variant="body2">
-          Streamlining Appointment Requests for Efficient Patient Care
+          Posts list for Efficient Patient Care
         </Typography>
         <Posts />
       </Container>
